@@ -1039,5 +1039,188 @@ button,.quickSmall{padding:7px 9px!important;font-size:12px!important;line-heigh
 })();
 </script>
 
+
+
+<style id="v2-10-fixed-ratio-and-extra-compact">
+/* v2.10: fixed-stage scaling. The whole handheld is one 1280x960 canvas.
+   Window size changes ONLY scale the canvas; it never reflows the UI. */
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  overflow:hidden!important;
+  margin:0!important;
+  padding:0!important;
+}
+body{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:radial-gradient(ellipse at 50% 42%,#3b3f47 0%,#23272e 58%,#171a20 100%)!important;
+}
+.console{
+  width:1280px!important;
+  height:960px!important;
+  min-width:1280px!important;
+  max-width:1280px!important;
+  min-height:960px!important;
+  max-height:960px!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+  transform-origin:center center!important;
+}
+/* Undo responsive/mobile layout mutations: keep exact same composition everywhere. */
+.glassShell,.loop,.cornerCut,.topRail,.bottomRail,.dpad,.stick,.psLogo,.abxy,.selectStart,.speaker,.rightSpeaker,.bottomControls{
+  display:block!important;
+}
+.selectStart,.bottomControls{display:flex!important;}
+.brandPlate,.powerLed{display:none!important;}
+.screen{
+  display:block!important;
+}
+.desktop,.app{
+  display:flex!important;
+  flex-direction:column!important;
+}
+.page{display:none!important;}
+.page.active{display:flex!important;flex-direction:column!important;}
+.subpage{display:none!important;}
+.subpage.active{display:flex!important;flex-direction:column!important;}
+#chooseMain.active{display:flex!important;}
+#chooseMain.active .twoCols{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+  height:100%!important;
+  min-height:0!important;
+}
+#addSubpage.active .card{
+  display:grid!important;
+  grid-template-columns:minmax(190px,.88fr) minmax(205px,1fr)!important;
+  column-gap:10px!important;
+  row-gap:4px!important;
+}
+/* Extra compact inner UI: leave the three main folder tabs alone, shrink only content inside pages. */
+.app{padding:6px 7px 0!important;overflow:hidden!important;}
+.tabs{margin-top:4px!important;gap:4px!important;flex:0 0 auto!important;}
+.tab{padding:9px 16px!important;font-size:14px!important;height:39px!important;line-height:1.05!important;}
+.calendarBtn{width:34px!important;height:30px!important;font-size:13px!important;}
+#choosePage.active,#addPage.active,#poolPage.active{
+  height:calc(100% - 83px)!important;
+  max-height:calc(100% - 83px)!important;
+  padding:6px!important;
+  font-size:11px!important;
+  overflow:hidden!important;
+}
+.stats{gap:4px!important;margin:3px 0 5px!important;}
+.pill{font-size:11px!important;padding:2px 6px!important;line-height:1.1!important;}
+.subtabs{height:28px!important;min-height:28px!important;gap:3px!important;padding-left:4px!important;}
+.subtab{height:27px!important;padding:5px 12px!important;font-size:11px!important;line-height:1!important;}
+.subpage.active{padding:5px!important;overflow:hidden!important;min-height:0!important;}
+.card{padding:7px!important;margin:0!important;overflow:hidden!important;}
+.card,.result{font-size:11px!important;}
+.bigAsk{
+  height:24px!important;
+  margin:-7px -7px 6px!important;
+  padding:4px 7px!important;
+  font-size:12px!important;
+  line-height:1.05!important;
+}
+label{font-size:11px!important;margin:4px 0 3px!important;line-height:1.1!important;}
+.value{min-width:38px!important;padding:1px 5px!important;font-size:11px!important;}
+.sliderBox{margin:6px 0!important;}
+input[type="range"]{height:10px!important;}
+input[type="range"]::-webkit-slider-thumb{width:16px!important;height:20px!important;}
+.sliderBox.energy input[type="range"]{height:9px!important;}
+.sliderBox.energy input[type="range"]::-webkit-slider-thumb{width:18px!important;height:18px!important;}
+.ticks,.energyTicks{font-size:9px!important;margin-top:1px!important;}
+button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-height:1!important;}
+.full{height:27px!important;margin-top:5px!important;}
+/* NOW page: both windows fully visible, no bottom clipping. */
+#chooseMain.active .card{height:100%!important;min-height:0!important;padding:7px!important;}
+#chooseMain.active .result{height:calc(100% - 22px)!important;min-height:0!important;padding:8px!important;overflow:hidden!important;}
+#chooseMain.active .empty{font-size:12px!important;line-height:1.25!important;padding:6px!important;}
+#chooseMain.active .resultName{font-size:17px!important;margin:4px 0!important;}
+#chooseMain.active .reason{font-size:11px!important;line-height:1.25!important;}
+/* ADD page: same original two-column structure, just smaller. */
+#addSubpage.active{padding:5px!important;}
+#addSubpage.active .card{
+  height:100%!important;
+  padding:9px!important;
+  overflow:hidden!important;
+  font-size:11px!important;
+}
+#addSubpage.active input[type="text"]{height:27px!important;padding:4px 6px!important;font-size:11px!important;}
+#addSubpage.active .quickSmall{height:27px!important;padding:4px 7px!important;font-size:10px!important;white-space:nowrap!important;}
+#addSubpage.active .sliderBox:nth-of-type(1){margin:4px 0!important;}
+#addSubpage.active .sliderBox:nth-of-type(2){margin:4px 0!important;}
+#addSubpage.active .priorityArea{
+  grid-template-columns:18px 1fr!important;
+  grid-template-rows:1fr 16px!important;
+  gap:3px!important;
+}
+#addSubpage.active .priorityPad{
+  height:148px!important;
+  max-height:148px!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+}
+#addSubpage.active .yAxis span,#addSubpage.active .xAxis{font-size:9px!important;letter-spacing:1px!important;}
+#addSubpage.active .dot{width:14px!important;height:14px!important;border-width:2px!important;}
+#addSubpage.active .priorityHint{font-size:9px!important;line-height:1.1!important;}
+#addSubpage.active button.full{height:27px!important;}
+/* POOL + quick list compact. */
+#poolSubpage.active .card{padding:7px!important;overflow:auto!important;}
+#poolSubpage.active > button.full{height:27px!important;}
+.task,.fishChip{padding:6px!important;margin-bottom:5px!important;font-size:11px!important;}
+.tag{font-size:9px!important;margin-top:2px!important;}
+.icon{height:20px!important;width:25px!important;font-size:9px!important;}
+.actions button{padding:4px 6px!important;font-size:10px!important;}
+/* Calendar and long-press picker: fixed inside screen, compact. */
+.modal{
+  position:absolute!important;
+  inset:35px 9px 29px 9px!important;
+  padding:5px!important;
+  z-index:80!important;
+  overflow:hidden!important;
+}
+.modalBox{padding:7px!important;font-size:10px!important;overflow:hidden!important;}
+.modalHead h2,.modalHead h3{font-size:14px!important;}
+.slimPill,.slimBtn{font-size:10px!important;padding:4px 7px!important;}
+.closeX{width:25px!important;height:25px!important;}
+.calHead{font-size:9px!important;min-height:20px!important;padding:2px!important;}
+.calDay{min-height:26px!important;padding:2px!important;}
+.calNum{font-size:10px!important;}
+.notePreview,.scheduledBadge{font-size:8px!important;padding:1px 2px!important;}
+.desktop .popover,.popover{
+  width:min(270px,78%)!important;
+  max-height:68%!important;
+  padding:8px!important;
+  font-size:10px!important;
+}
+.popTitle{font-size:13px!important;}
+.popSmall{font-size:9px!important;}
+.existingTasks{max-height:128px!important;}
+.pickTask{padding:6px!important;font-size:10px!important;}
+.pickTask .small{font-size:8px!important;}
+</style>
+<script id="v2-10-fixed-stage-scale">
+(function(){
+  const STAGE_W = 1280;
+  const STAGE_H = 960;
+  function fitStage(){
+    const c = document.querySelector('.console');
+    if(!c) return;
+    const s = Math.min(window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
+    c.style.transform = 'scale(' + s + ')';
+    document.body.style.width = window.innerWidth + 'px';
+    document.body.style.height = window.innerHeight + 'px';
+  }
+  window.addEventListener('resize', fitStage, {passive:true});
+  window.addEventListener('orientationchange', fitStage, {passive:true});
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitStage); else fitStage();
+})();
+</script>
+
 </body>
 </html>
