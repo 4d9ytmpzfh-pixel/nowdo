@@ -1820,5 +1820,98 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
 })();
 </script>
 
+
+
+<style id="v2-15-shell-scale-now-calendar-fix">
+/* v2.15: final polish from screenshots
+   - shrink white body + acrylic shell together so the full device fits
+   - keep screen/app layout untouched
+   - NOW page: remove ENERGY number ticks and pin NOW button to bottom
+   - calendar: give week/month panel a little more vertical room while keeping timeline visible
+*/
+
+/* 1) White body and acrylic case: same shape, smaller footprint, no overflow/crop. */
+.console::before{
+  inset:82px 96px 88px 96px!important;
+  border-radius:68px 50px 68px 50px / 50px 68px 50px 68px!important;
+  background:
+    radial-gradient(ellipse at 13% 50%,rgba(255,255,255,.96) 0 13%,rgba(255,255,255,.58) 34%,transparent 57%),
+    radial-gradient(ellipse at 87% 50%,rgba(255,255,255,.94) 0 13%,rgba(255,255,255,.52) 34%,transparent 57%),
+    linear-gradient(90deg,#fbfdff 0%,#f0f5fb 17%,#ffffff 50%,#f0f5fb 83%,#fbfdff 100%)!important;
+  box-shadow:
+    inset 0 4px 18px rgba(255,255,255,.90),
+    inset 0 -14px 26px rgba(110,130,155,.14),
+    0 0 18px rgba(255,255,255,.20)!important;
+}
+.glassShell{
+  inset:64px 76px 70px 76px!important;
+  border-radius:78px 56px 78px 56px / 56px 78px 56px 78px!important;
+  border-width:3px!important;
+  opacity:.90!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(145,175,210,.15),
+    inset 0 15px 22px rgba(255,255,255,.22),
+    inset 0 -15px 24px rgba(40,64,96,.10),
+    0 0 12px rgba(200,228,255,.15)!important;
+}
+.glassShell:before{left:265px!important;right:265px!important;top:12px!important;height:16px!important;opacity:.75!important;}
+.glassShell:after{left:265px!important;right:265px!important;bottom:12px!important;height:13px!important;opacity:.72!important;}
+.loop{width:62px!important;height:42px!important;border-width:3px!important;opacity:.66!important;}
+.l1{left:46px!important;top:92px!important;transform:rotate(-12deg)!important;}
+.l2{right:46px!important;top:92px!important;transform:rotate(12deg)!important;}
+.l3{left:46px!important;bottom:88px!important;transform:rotate(12deg)!important;}
+.l4{right:46px!important;bottom:88px!important;transform:rotate(-12deg)!important;}
+.cornerCut{width:52px!important;height:39px!important;opacity:.68!important;}
+.cc1{left:124px!important;top:86px!important;}
+.cc2{right:124px!important;top:86px!important;transform:scaleX(-1)!important;}
+.cc3{left:124px!important;bottom:86px!important;transform:scaleY(-1)!important;}
+.cc4{right:124px!important;bottom:86px!important;transform:scale(-1)!important;}
+.cornerCut:after{left:15px!important;top:9px!important;width:35px!important;height:24px!important;}
+.topRail{left:285px!important;right:285px!important;top:58px!important;height:15px!important;opacity:.62!important;}
+.bottomRail{left:285px!important;right:285px!important;bottom:60px!important;height:14px!important;opacity:.62!important;}
+
+/* 2) NOW page: energy slider does not need numbered ticks. Put NOW button at bottom of the left window. */
+#chooseMain.active .twoCols > .card:first-child{
+  display:flex!important;
+  flex-direction:column!important;
+}
+#chooseMain.active .twoCols > .card:first-child .sliderBox.energy .energyTicks{
+  display:none!important;
+}
+#chooseMain.active .twoCols > .card:first-child .sliderBox.energy{
+  margin-bottom:6px!important;
+}
+#chooseMain.active .twoCols > .card:first-child button.full{
+  margin-top:auto!important;
+  margin-bottom:0!important;
+}
+
+/* 3) Calendar: keep timeline visible, but make the week/month display breathe more. */
+#calendarModal .modalBox{
+  grid-template-rows:auto auto minmax(238px,1fr) minmax(116px,142px)!important;
+  gap:5px!important;
+}
+#calendarModal .calendarGrid{
+  max-height:276px!important;
+  overflow:hidden!important;
+}
+#calendarModal .calDay{
+  min-height:32px!important;
+}
+#calendarModal .calDay[style]{
+  min-height:72px!important;
+}
+#weekPlanner{
+  min-height:22px!important;
+}
+#calendarModal .dayTitle{
+  margin:3px 0 3px!important;
+}
+#calendarModal .hourTimeline{
+  max-height:124px!important;
+  min-height:104px!important;
+}
+</style>
+
 </body>
 </html>
