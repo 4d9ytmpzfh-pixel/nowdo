@@ -2262,5 +2262,210 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
 })();
 </script>
 
+
+<style id="v2-18-bugfix-final">
+/* v2.18: fixes only -- result overlap, calendar spacing, shell fit */
+.console::before{inset:126px 66px 140px 66px!important;border-radius:50px!important;}
+.glassShell{inset:112px 48px 126px 48px!important;border-radius:58px!important;}
+.dpad{left:7.4%!important;top:38.0%!important;}
+.stick{left:7.35%!important;bottom:30.4%!important;}
+.abxy{right:7.3%!important;top:41.0%!important;}
+.selectStart{right:8.15%!important;top:65.2%!important;}
+
+/* NOW result state: stop text/button collision */
+#chooseMain.active .twoCols > .card:nth-child(2) .result{
+  height:204px!important;min-height:204px!important;max-height:204px!important;
+  padding:14px 18px!important;overflow:hidden!important;display:block!important;position:relative!important;
+}
+.now-result-clean{height:100%;display:grid;grid-template-columns:1fr 132px;gap:12px;align-items:center;}
+.now-result-copy{min-width:0;text-align:center;}
+.now-result-kicker{font-size:11px;line-height:1.1;margin-bottom:6px;color:#001a33;}
+.now-result-name{font-size:18px;font-weight:900;line-height:1.05;margin:4px 0;word-break:break-word;}
+.now-result-reason{font-size:10px;line-height:1.22;color:#4d5a6d;text-align:left;max-width:190px;margin:8px auto 0;}
+.now-result-clean button{position:static!important;transform:none!important;width:132px!important;min-height:46px!important;margin:0!important;padding:6px 8px!important;font-size:13px!important;line-height:1.05!important;white-space:normal!important;}
+#chooseMain.active .result .empty{display:flex!important;align-items:center!important;justify-content:center!important;height:100%!important;min-height:0!important;padding:0!important;text-align:center!important;}
+
+/* Schedule popover must not cover NOW screen unless calendar is open */
+body:not(.calendar-open) #eventPopover{display:none!important;}
+#eventPopover.popover{width:330px!important;max-width:330px!important;font-size:12px!important;}
+#eventPopover .pickTask{padding:7px 9px!important;font-size:12px!important;}
+#eventPopover .existingTasks{max-height:145px!important;}
+
+/* Calendar: compact month/week, no huge dead blue gap, timeline gets real height */
+#calendarModal .modalBox{display:flex!important;flex-direction:column!important;gap:4px!important;overflow:hidden!important;}
+#calendarModal .modalHead{margin:0!important;}
+#calendarModal .stats{margin:4px 0!important;}
+#calendarMonth{flex:0 0 auto!important;overflow:visible!important;}
+#calendarMonth .modalHead{height:30px!important;}
+#calendarModal .calendarGrid{margin-top:4px!important;}
+#calendarModal .calHead{min-height:16px!important;height:16px!important;padding:1px!important;font-size:10px!important;}
+#calendarModal .calDay{min-height:34px!important;height:34px!important;padding:2px 4px!important;font-size:11px!important;}
+#calendarModal.week-mode .calDay{min-height:86px!important;height:86px!important;}
+#weekPlanner{flex:0 0 auto!important;min-height:12px!important;max-height:18px!important;margin:2px 0!important;}
+#dayTimeline,.dayTimeline{flex:1 1 auto!important;min-height:230px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;margin-top:2px!important;}
+#calendarModal.week-mode #dayTimeline,#calendarModal.week-mode .dayTimeline{min-height:250px!important;}
+#calendarModal .dayTitle{margin:2px 0 3px!important;line-height:1!important;}
+#calendarModal .hourTimeline{flex:1 1 auto!important;min-height:210px!important;max-height:none!important;margin-top:0!important;overflow-y:auto!important;}
+#calendarModal.week-mode .hourTimeline{min-height:230px!important;}
+#calendarModal .hourRow{min-height:19px!important;}
+#calendarModal .hourRow.major{min-height:24px!important;}
+#calendarModal .eventBlock{font-size:10px!important;padding:4px 6px!important;}
+#calendarModal .eventBlock .tag{font-size:8px!important;}
+</style>
+
+<script id="v2-18-functional-bugfixes">
+(function(){
+  const VERSION = 'NOWDO_v2_18_clean_bugfix';
+  const KEYS = ['nowDoTasksV16','nowDoQuicksV16','nowDoLogsV16','nowDoPlansV16'];
+
+  function hardNewVersionReset(){
+    try{
+      if(localStorage.getItem('nowdoLoadedVersion') !== VERSION){
+        KEYS.forEach(k=>localStorage.removeItem(k));
+        localStorage.setItem('nowdoLoadedVersion', VERSION);
+        tasks=[]; quicks=[]; logs=[]; plans=[];
+        save();
+      }
+    }catch(e){}
+  }
+  function scrubTesting(){
+    const bad = new Set(['a','ok a','test','testing','ddd','dd','s','sss']);
+    try{
+      tasks = (tasks||[]).filter(x=>!bad.has(String(x.name||x.text||'').trim().toLowerCase()));
+      logs = (logs||[]).filter(x=>!bad.has(String(x.name||x.text||'').trim().toLowerCase()));
+      plans = (plans||[]).filter(x=>!bad.has(String(x.name||x.text||'').trim().toLowerCase()));
+      save();
+    }catch(e){}
+  }
+  hardNewVersionReset();
+  scrubTesting();
+
+  window.clearLogs = function(){
+    logs=[]; plans=[];
+    try{localStorage.removeItem('nowDoLogsV16');localStorage.removeItem('nowDoPlansV16');}catch(e){}
+    save();
+    if(typeof renderCalendar==='function') renderCalendar();
+    if(typeof renderTasks==='function') renderTasks();
+    if(typeof showToast==='function') showToast('Timeline cleared');
+  };
+  window.clearTasks = function(){
+    tasks=[];
+    plans=(plans||[]).filter(p=>p.kind!=='plan');
+    save();
+    if(typeof renderTasks==='function') renderTasks();
+    if(typeof renderCalendar==='function') renderCalendar();
+  };
+
+  window.closeCalendar = function(){
+    document.getElementById('calendarModal')?.classList.remove('active');
+    document.body.classList.remove('calendar-open');
+    closePopovers?.();
+  };
+  window.openCalendar = function(){
+    scrubTesting();
+    selectedCalendarDate = new Date();
+    renderCalendar();
+    document.getElementById('calendarModal')?.classList.add('active');
+    document.body.classList.add('calendar-open');
+  };
+  const oldCloseBg = window.closeCalendarBg;
+  window.closeCalendarBg = function(e){ if(e && e.target && e.target.id==='calendarModal') closeCalendar(); };
+  const oldOpenPage = window.openPage;
+  window.openPage = function(pageId){
+    closePopovers?.();
+    if(oldOpenPage) oldOpenPage(pageId);
+  };
+
+  function chooseCandidate(){
+    const nowTime=Number(document.getElementById('nowTime')?.value || 30);
+    const nowEnergy=Number(document.getElementById('nowEnergy')?.value || 3);
+    const list=(tasks||[]).filter(t=>t.time<=nowTime && t.energy<=nowEnergy);
+    if(list.length) return [...list].sort(comparePriority)[0];
+    if((tasks||[]).length) return [...tasks].sort(comparePriority)[0];
+    return null;
+  }
+  window.chooseTask = function(){
+    const box=document.getElementById('result');
+    const c=chooseCandidate();
+    if(!box) return;
+    if(!c){box.innerHTML='<div class="empty">Task pool is empty. Add something first.</div>';return;}
+    const nowTime=Number(document.getElementById('nowTime')?.value || c.time);
+    const mini = c.time>nowTime || c.energy>Number(document.getElementById('nowEnergy')?.value || 3);
+    box.innerHTML=`<div class="now-result-clean">
+      <div class="now-result-copy">
+        <div class="now-result-kicker">${mini?'MINI VERSION':'DO NOW:'}</div>
+        <div class="now-result-name">${escapeHtml(c.name)}</div>
+        <div class="now-result-reason">${mini?'Try a 5-min version. Open it / prepare it / do one tiny step.':'Do '+formatTime(Math.min(c.time,nowTime))+'. Priority: urgent, then important, then work/life.'}<br>Type: ${typeName(c.type)}, urg ${Math.round(c.urgency*100)}%, imp ${Math.round(c.importance*100)}%.</div>
+      </div>
+      <button class="full" onclick="startTask(${c.id})">START 做，<br>并加到 TIMELINE</button>
+    </div>`;
+  };
+  window.startTask = function(id){
+    const item=(tasks||[]).find(t=>t.id===id); if(!item)return;
+    const minutes=Math.min(item.time, Number(document.getElementById('nowTime')?.value || item.time));
+    addLog(item.name,item.type,minutes);
+    tasks=(tasks||[]).filter(t=>t.id!==id);
+    save(); renderTasks();
+    const box=document.getElementById('result');
+    if(box) box.innerHTML='<div class="empty">STARTED. 已记录到 TIMELINE，并从任务池移除。</div>';
+  };
+
+  // note: one note per day, editable; delete by leaving it empty
+  window.startInlineNote = function(e,y,m,d){
+    e.preventDefault(); e.stopPropagation(); cancelLongPress?.();
+    const cell=e.currentTarget, key=dateKey(new Date(y,m,d));
+    if(cell.querySelector('.inlineNote'))return;
+    const old=(plans||[]).find(p=>p.date===key && (p.kind||'note')==='note');
+    const input=document.createElement('textarea');
+    input.className='inlineNote'; input.rows=2; input.placeholder='note...'; input.value=old?old.text:'';
+    input.addEventListener('click',ev=>ev.stopPropagation());
+    input.addEventListener('pointerdown',ev=>ev.stopPropagation());
+    input.addEventListener('keydown',ev=>{if(ev.key==='Enter'&&!ev.shiftKey){ev.preventDefault();saveInlineNote(input,key)} if(ev.key==='Escape')renderCalendar();});
+    input.addEventListener('blur',()=>saveInlineNote(input,key));
+    cell.appendChild(input); setTimeout(()=>input.focus(),40);
+  };
+  window.saveInlineNote = function(input,key){
+    const text=(input.value||'').trim();
+    const idx=(plans||[]).findIndex(p=>p.date===key && (p.kind||'note')==='note');
+    if(!text){ if(idx>=0) plans.splice(idx,1); save(); renderCalendar(); return; }
+    if(idx>=0){ plans[idx].text=text; plans[idx].kind='note'; }
+    else plans.push({id:Date.now(),date:key,text,kind:'note'});
+    save(); renderCalendar();
+  };
+
+  // notes only in calendar cells; timeline only logs + scheduled task pins
+  const originalRenderNotePreviews = window.renderNotePreviews;
+  window.renderNotePreviews = function(key){
+    const ns=(plans||[]).filter(p=>p.date===key && (p.kind||'note')==='note').slice(0,1);
+    const ps=(plans||[]).filter(p=>p.date===key && p.kind==='plan').slice(0,2);
+    return ns.map(n=>`<div class="notePreview">${escapeHtml(n.text)}</div>`).join('') + ps.map(p=>`<div class="scheduledBadge">${escapeHtml(p.text)}</div>`).join('');
+  };
+  window.renderDayTimeline = function(){
+    const box=document.getElementById('dayTimeline'); if(!box)return;
+    const key=dateKey(selectedCalendarDate);
+    const dayLogs=(logs||[]).filter(l=>dateKey(new Date(l.start))===key).sort((a,b)=>new Date(a.start)-new Date(b.start));
+    const dayPlans=(plans||[]).filter(p=>p.date===key && p.kind==='plan');
+    const title=selectedCalendarDate.toLocaleDateString('en-CA',{month:'short',day:'numeric',weekday:'short'});
+    let rows='';
+    for(let h=0;h<=23;h++){
+      const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h), major=h%3===0;
+      rows+=`<div class="hourRow ${major?'major':''}"><div class="hourLabel">${String(h).padStart(2,'0')}:00</div><div class="hourSlot">`;
+      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||'work')} · ${formatTime(p.time||30)}</div></div>`).join('');
+      rows+=hourLogs.map(l=>{const s=new Date(l.start),en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} · ${l.minutes}min</div></div>`}).join('');
+      rows+='</div></div>';
+    }
+    box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`;
+  };
+  const oldRenderCalendar=window.renderCalendar;
+  window.renderCalendar=function(){
+    if(oldRenderCalendar) oldRenderCalendar();
+    const modal=document.getElementById('calendarModal');
+    if(modal) modal.classList.toggle('week-mode', calendarView==='week');
+  };
+  scrubTesting();
+  try{renderTasks();renderQuicks();}catch(e){}
+})();
+</script>
+
 </body>
 </html>
