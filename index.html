@@ -2051,5 +2051,216 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
 })();
 </script>
 
+
+
+<style id="v2-17-calendar-clear-shell-result-fix">
+/* v2.17 targeted fixes only:
+   1) shell slightly shorter + slightly wider, controls stay inside body
+   2) NOW result after pressing NOW is compact and non-overlapping
+   3) calendar has no giant blank gap; timeline gets the space
+*/
+
+/* Shell/body: screen stays untouched; only the white body + acrylic outline change. */
+.console::before{
+  inset:128px 76px 142px 76px!important;
+  border-radius:54px 44px 54px 44px / 44px 54px 44px 54px!important;
+}
+.glassShell{
+  inset:112px 58px 124px 58px!important;
+  border-radius:64px 48px 64px 48px / 48px 64px 48px 64px!important;
+}
+.glassShell:before{left:300px!important;right:300px!important;top:9px!important;height:12px!important;}
+.glassShell:after{left:300px!important;right:300px!important;bottom:9px!important;height:10px!important;}
+.loop{width:54px!important;height:34px!important;opacity:.56!important;}
+.l1{left:54px!important;top:132px!important;}
+.l2{right:54px!important;top:132px!important;}
+.l3{left:54px!important;bottom:132px!important;}
+.l4{right:54px!important;bottom:132px!important;}
+.cornerCut{width:44px!important;height:32px!important;opacity:.58!important;}
+.cc1{left:138px!important;top:126px!important;}
+.cc2{right:138px!important;top:126px!important;transform:scaleX(-1)!important;}
+.cc3{left:138px!important;bottom:126px!important;transform:scaleY(-1)!important;}
+.cc4{right:138px!important;bottom:126px!important;transform:scale(-1)!important;}
+.topRail{top:92px!important;height:11px!important;left:315px!important;right:315px!important;}
+.bottomRail{bottom:98px!important;height:10px!important;left:315px!important;right:315px!important;}
+
+/* Pull hardware inward so buttons/joystick do not fall outside the white body. */
+.dpad{left:7.75%!important;top:39.0%!important;width:7.65%!important;}
+.stick{left:7.65%!important;bottom:30.7%!important;width:7.05%!important;}
+.speaker{left:8.0%!important;bottom:20.0%!important;}
+.abxy{right:8.05%!important;top:42.0%!important;width:10.7%!important;height:14.2%!important;}
+.selectStart{right:8.9%!important;top:65.8%!important;}
+
+/* NOW result: after choosing a task, keep text and START button from colliding. */
+#chooseMain.active .twoCols > .card:nth-child(2) .result{
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:6px!important;
+  height:204px!important;
+  min-height:204px!important;
+  max-height:204px!important;
+  padding:18px 22px!important;
+  overflow:hidden!important;
+}
+#chooseMain.active .twoCols > .card:nth-child(2) .result > div:not(.empty){
+  margin:0!important;
+}
+#chooseMain.active .result .resultName{
+  font-size:15px!important;
+  line-height:1!important;
+  margin:0!important;
+  word-break:break-word!important;
+}
+#chooseMain.active .result .reason{
+  font-size:9.6px!important;
+  line-height:1.22!important;
+  max-width:62%!important;
+  margin:0!important;
+}
+#chooseMain.active .result button.full{
+  position:absolute!important;
+  right:22px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:118px!important;
+  min-height:34px!important;
+  padding:4px 7px!important;
+  margin:0!important;
+  font-size:12px!important;
+  line-height:1.05!important;
+  white-space:normal!important;
+}
+#chooseMain.active .result .empty{
+  min-height:154px!important;
+}
+
+/* Calendar: switch from broken grid sizing to column sizing so the empty blue gap disappears. */
+#calendarModal .modalBox{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:4px!important;
+  overflow:hidden!important;
+}
+#calendarModal .modalHead,
+#calendarModal .stats,
+#calendarMonth,
+#weekPlanner{
+  flex:0 0 auto!important;
+}
+#calendarMonth{
+  min-height:0!important;
+  overflow:visible!important;
+}
+#calendarModal .calendarGrid{
+  margin-top:4px!important;
+  overflow:hidden!important;
+  max-height:none!important;
+}
+/* month cells compact enough to leave room for timeline */
+#calendarModal .calDay{
+  min-height:29px!important;
+  padding:2px 4px!important;
+}
+#calendarModal .calHead{
+  min-height:17px!important;
+  padding:1px!important;
+}
+/* week note-writing cells: a little taller, but not so tall that the timeline dies */
+#calendarModal .calDay[style]{
+  min-height:66px!important;
+}
+#weekPlanner{
+  min-height:14px!important;
+  max-height:18px!important;
+  overflow:hidden!important;
+  font-size:10px!important;
+}
+#dayTimeline,.dayTimeline{
+  flex:1 1 auto!important;
+  min-height:132px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+}
+#calendarModal .dayTitle{
+  flex:0 0 auto!important;
+  margin:2px 0 2px!important;
+  line-height:1.05!important;
+}
+#calendarModal .hourTimeline{
+  flex:1 1 auto!important;
+  min-height:112px!important;
+  max-height:none!important;
+  overflow-y:auto!important;
+  margin-top:2px!important;
+}
+#calendarModal .hourRow{min-height:17px!important;}
+#calendarModal .hourRow.major{min-height:21px!important;}
+#calendarModal .eventBlock{padding:3px 5px!important;font-size:9px!important;}
+#calendarModal .eventBlock .tag{font-size:8px!important;}
+</style>
+
+<script id="v2-17-storage-clear-and-calendar-fix">
+(function(){
+  const VERSION = 'NOWDO_v2_17_clean_start';
+  const KEYS = ['nowDoTasksV16','nowDoQuicksV16','nowDoLogsV16','nowDoPlansV16'];
+
+  // New uploaded version should open like a new user on the same GitHub Pages origin.
+  // It only wipes once per version, so normal reloads inside this version keep the user's new data.
+  try{
+    if(localStorage.getItem('nowdoLoadedVersion') !== VERSION){
+      KEYS.forEach(k => localStorage.removeItem(k));
+      localStorage.setItem('nowdoLoadedVersion', VERSION);
+      if(typeof tasks !== 'undefined') tasks = [];
+      if(typeof quicks !== 'undefined') quicks = [];
+      if(typeof logs !== 'undefined') logs = [];
+      if(typeof plans !== 'undefined') plans = [];
+      if(typeof save === 'function') save();
+    }
+  }catch(e){}
+
+  function removeTestData(){
+    try{
+      if(typeof plans !== 'undefined'){
+        plans = plans.filter(p => {
+          const txt = String((p && p.text) || '').trim().toLowerCase();
+          return !(p && (txt === 'a' || txt === 'test' || txt === 'testing' || txt === 'ok a'));
+        });
+      }
+      if(typeof logs !== 'undefined'){
+        logs = logs.filter(l => {
+          const txt = String((l && l.name) || '').trim().toLowerCase();
+          return !(txt === 'a' || txt === 'test' || txt === 'testing' || txt === 'ok a');
+        });
+      }
+      if(typeof save === 'function') save();
+    }catch(e){}
+  }
+
+  // CLEAR must clear all visible calendar items: logs, pinned tasks, notes.
+  window.clearLogs = function(){
+    if(confirm('CLEAR all timeline logs, notes, and scheduled calendar items?')){
+      try{ logs = []; plans = []; }catch(e){}
+      try{ save(); }catch(e){}
+      try{ renderCalendar(); }catch(e){}
+      try{ showToast('Timeline cleared'); }catch(e){}
+    }
+  };
+
+  const oldOpenCalendar = window.openCalendar;
+  window.openCalendar = function(){
+    removeTestData();
+    if(typeof selectedCalendarDate !== 'undefined') selectedCalendarDate = new Date();
+    if(oldOpenCalendar) oldOpenCalendar();
+    try{ renderCalendar(); }catch(e){}
+  };
+
+  removeTestData();
+  try{ renderTasks(); renderQuicks(); }catch(e){}
+})();
+</script>
+
 </body>
 </html>
