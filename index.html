@@ -675,5 +675,136 @@ function bindControls(){["taskTime","nowTime","taskEnergy","nowEnergy"].forEach(
 })();
 
 </script>
+
+
+<style id="v2-8-page-restore-hotfix">
+/* v2.8 HOTFIX: restore original page system.
+   v2.7 accidentally forced NOW/ADD/POOL to display at the same time.
+   This block must stay at the VERY END so it wins. */
+#choosePage:not(.active),
+#addPage:not(.active),
+#poolPage:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  min-height:0!important;
+  max-height:0!important;
+  overflow:hidden!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+}
+#choosePage.active,
+#addPage.active,
+#poolPage.active{
+  display:flex!important;
+  visibility:visible!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  padding:10px!important;
+  margin:0!important;
+}
+#chooseMain:not(.active),
+#chooseQuick:not(.active),
+#addSubpage:not(.active),
+#poolSubpage:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  min-height:0!important;
+  max-height:0!important;
+  overflow:hidden!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+}
+#chooseMain.active,
+#chooseQuick.active,
+#addSubpage.active,
+#poolSubpage.active{
+  display:block!important;
+  visibility:visible!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+}
+/* keep the original NOW layout readable instead of stacking random windows */
+#chooseMain.active .twoCols{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:12px!important;
+  height:auto!important;
+}
+#chooseMain.active .card{
+  min-height:0!important;
+  height:auto!important;
+}
+#chooseMain.active .result{
+  min-height:180px!important;
+  height:auto!important;
+}
+/* restore ADD as one compact panel, not a chopped strip */
+#addSubpage.active .card{
+  display:grid!important;
+  grid-template-columns:minmax(260px, 1fr) minmax(260px, .95fr)!important;
+  grid-auto-rows:auto!important;
+  column-gap:18px!important;
+  row-gap:8px!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:18px!important;
+}
+#addSubpage.active .card > label:first-child,
+#addSubpage.active .nameLine,
+#addSubpage.active .sliderBox{
+  grid-column:1!important;
+  position:static!important;
+  max-width:none!important;
+}
+#addSubpage.active .card > label:nth-of-type(4),
+#addSubpage.active .priorityArea,
+#addSubpage.active .priorityHint{
+  grid-column:2!important;
+  position:static!important;
+  width:auto!important;
+  margin:0!important;
+  max-width:none!important;
+}
+#addSubpage.active .priorityPad{
+  min-height:210px!important;
+  max-height:240px!important;
+}
+#addSubpage.active button.full{
+  grid-column:1 / -1!important;
+  position:static!important;
+  max-width:none!important;
+  margin-top:8px!important;
+}
+/* keep the taskbar from covering the active page */
+.app{
+  padding-bottom:42px!important;
+}
+.page{
+  max-height:calc(100% - 88px)!important;
+}
+.taskbar{
+  z-index:45!important;
+}
+/* hardware slightly clearer, but do not touch app logic */
+.dpad{top:47.0%!important;width:10.0%!important;height:13.3%!important;}
+.stick{bottom:28.8%!important;width:8.0%!important;}
+.abxy{top:45.2%!important;width:12.0%!important;}
+@media (max-width:900px){
+  #chooseMain.active .twoCols{grid-template-columns:1fr!important;}
+  #addSubpage.active .card{grid-template-columns:1fr!important;}
+  #addSubpage.active .card > label:nth-of-type(4),
+  #addSubpage.active .priorityArea,
+  #addSubpage.active .priorityHint{grid-column:1!important;}
+}
+</style>
+
 </body>
 </html>
