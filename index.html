@@ -4,6 +4,15 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>NOWDO v2.5 Reference Match</title>
+<!-- PWA support: iPad Home Screen fullscreen app -->
+<meta name="theme-color" content="#23272e" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="NOWDO" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="apple-touch-icon" href="./icons/icon-180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+
 <style>
 :root{
   --ink:#151922;--muted:#5f6877;--line:#5d6675;--blue:#004bd6;--blue2:#002f91;
@@ -223,7 +232,7 @@ body{
 .tab{height:38px!important;min-width:94px!important;padding:9px 12px!important;font-size:15px!important;border:2px solid #45566d!important;border-bottom:0!important;border-top-color:#fff!important;border-left-color:#fff!important;background:linear-gradient(180deg,#f9fbff,#aec9ee)!important;color:#17202d!important;}
 .tab.active{background:linear-gradient(180deg,#135be4,#8fbfff)!important;color:#fff!important;text-shadow:0 1px rgba(0,0,0,.35)!important;}
 .calendarBtn{margin-left:auto!important;width:38px!important;height:32px!important;padding:0!important;font-size:0!important;}
-.calendarBtn::after{content:"▤";font-size:19px;color:#2a3d58;}
+.calendarBtn::after{content:"â¤";font-size:19px;color:#2a3d58;}
 .page{
   flex:1 1 auto!important;min-height:0!important;height:auto!important;overflow:hidden!important;
   padding:10px 12px 34px!important;
@@ -234,7 +243,7 @@ body{
 }
 /* bottom XP taskbar inside screen */
 .desktop::after{
-  content:"▦ Start      NOWDO System        📁 Folder - WORK        📁 Folder - LIFE                         🔊  01:47 AM";
+  content:"â¦ Start      NOWDO System        ð Folder - WORK        ð Folder - LIFE                         ð  01:47 AM";
   position:absolute;left:0;right:0;bottom:0;height:31px;z-index:60;
   border-top:2px solid #385376;background:linear-gradient(180deg,#e8f2ff,#a8bce0 45%,#7e97c3);
   color:#111827;font-size:13px;line-height:29px;padding-left:4px;white-space:nowrap;overflow:hidden;
@@ -250,7 +259,7 @@ body{
 .card{height:100%!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;background:#d9dbe3!important;border:2px solid #33445c!important;border-top-color:#eaf3ff!important;border-left-color:#eaf3ff!important;box-shadow:4px 4px 0 rgba(0,0,0,.20)!important;}
 .card::before,.result::before{display:none!important;content:none!important;}
 .bigAsk{height:32px!important;margin:0!important;padding:7px 10px!important;background:linear-gradient(180deg,#0714c1,#00328e)!important;border-bottom:2px solid #042069!important;color:#fff!important;font-size:17px!important;font-family:"Courier New",monospace!important;}
-.bigAsk::after{content:"4↘  ⧉"!important;float:right;font-size:14px;letter-spacing:2px;color:#fff;}
+.bigAsk::after{content:"4â  â§"!important;float:right;font-size:14px;letter-spacing:2px;color:#fff;}
 .card > .sliderBox:first-of-type{margin:18px 20px 8px!important}.sliderBox{margin:14px 20px!important}.card label{font-size:17px!important;color:#111827!important;font-weight:700!important;margin:7px 0!important;}
 .value{min-width:58px!important;background:#dce8fa!important;border:2px solid #9badc7!important;padding:3px 10px!important;font-size:16px!important;}
 input[type="range"]{height:12px!important;border:2px solid #40536b!important;border-top-color:#2b3546!important;border-left-color:#2b3546!important;background:linear-gradient(180deg,#d7e1ee,#748299 50%,#f6f8fb)!important;border-radius:6px!important;}
@@ -279,7 +288,7 @@ button.full{height:41px!important;margin:17px 20px 0!important;width:calc(100% -
 .abxy{display:block!important;right:5.1%!important;top:46.6%!important;width:11.4%!important;height:auto!important;aspect-ratio:1!important;z-index:11!important;}
 .abxy button{display:flex!important;align-items:center!important;justify-content:center!important;width:32%!important;height:32%!important;border-radius:50%!important;font-size:30px!important;color:#5f6672!important;background:radial-gradient(circle at 35% 25%,#f7f8fb,#cbd3dd 42%,#8d98aa 76%)!important;border:3px solid rgba(60,72,92,.45)!important;box-shadow:inset 3px 3px 4px rgba(255,255,255,.82),inset -4px -5px 8px rgba(0,0,0,.22),0 6px 10px rgba(0,0,0,.20)!important;}
 .tri{left:34%!important;top:0!important}.sq{left:0!important;top:34%!important}.cir{right:0!important;top:34%!important}.cross{left:34%!important;bottom:0!important}
-.tri::before{content:"△"}.sq::before{content:"□"}.cir::before{content:"○"}.cross::before{content:"×"}.abxy button{font-size:0!important}.abxy button::before{font-size:30px!important;line-height:1!important;}
+.tri::before{content:"â³"}.sq::before{content:"â¡"}.cir::before{content:"â"}.cross::before{content:"Ã"}.abxy button{font-size:0!important}.abxy button::before{font-size:30px!important;line-height:1!important;}
 .selectStart{display:flex!important;right:9.1%!important;bottom:29.1%!important;gap:7px!important;z-index:11!important;}
 .selectStart span{padding:5px 10px!important;border-radius:18px!important;font-size:11px!important;background:linear-gradient(180deg,#eff3fa,#b5bfcd)!important;border:2px solid rgba(72,84,104,.45)!important;color:#555f70!important;}
 .rightSpeaker{display:none!important;}
@@ -625,7 +634,7 @@ button.full{height:34px!important;margin:9px 0 0!important;width:100%!important;
 
 
 /* =========================================================
-   v2.11 MICRO FIX — requested final tweaks only
+   v2.11 MICRO FIX â requested final tweaks only
    - no PS text
    - D-pad upward
    - white inner body slightly larger, clear case visually narrower
@@ -730,30 +739,30 @@ button.full{height:34px!important;margin:9px 0 0!important;width:100%!important;
 <div class="console">
   <div class="glassShell"></div><div class="loop l1"></div><div class="loop l2"></div><div class="loop l3"></div><div class="loop l4"></div><div class="topRail"></div><div class="bottomRail"></div><div class="cornerCut cc1"></div><div class="cornerCut cc2"></div><div class="cornerCut cc3"></div><div class="cornerCut cc4"></div>
   <div class="brandPlate">NOWDO<small>v2.4</small></div><div class="powerLed">POWER</div><div class="psLogo">PS</div><div class="dpad"></div><div class="stick"></div>
-  <div class="abxy"><button class="tri">△</button><button class="sq">□</button><button class="cir">○</button><button class="cross">×</button></div>
+  <div class="abxy"><button class="tri">â³</button><button class="sq">â¡</button><button class="cir">â</button><button class="cross">Ã</button></div>
   <div class="selectStart"><span>SELECT</span><span>START</span></div><div class="speaker"></div><div class="rightSpeaker"></div>
-  <div class="bottomControls"><span>−</span><span>VOL</span><span>＋</span><span class="tiny"></span><span class="long">PS</span><span>♪</span><span>↩</span><span class="long">↻ ↺ ⇄</span></div>
+  <div class="bottomControls"><span>â</span><span>VOL</span><span>ï¼</span><span class="tiny"></span><span class="long">PS</span><span>âª</span><span>â©</span><span class="long">â» âº â</span></div>
   <div class="screen"><div class="desktop"><div class="topbar"><div>NOWDO SYSTEM</div><div><span id="topDate"></span><span class="battery"></span></div></div><div class="app">
-    <nav class="tabs"><div class="tab active" data-page="choosePage" onclick="openPage('choosePage')">01 NOW</div><div class="tab" data-page="addPage" onclick="openPage('addPage')">02 ADD</div><div class="tab" data-page="poolPage" onclick="openPage('poolPage')">03 POOL</div><button class="calendarBtn" onclick="openCalendar()">▦</button></nav>
+    <nav class="tabs"><div class="tab active" data-page="choosePage" onclick="openPage('choosePage')">01 NOW</div><div class="tab" data-page="addPage" onclick="openPage('addPage')">02 ADD</div><div class="tab" data-page="poolPage" onclick="openPage('poolPage')">03 POOL</div><button class="calendarBtn" onclick="openCalendar()">â¦</button></nav>
     <main id="choosePage" class="page active"><div class="stats"><span class="pill" id="workCountTop">WORK: 0</span><span class="pill" id="restCountTop">LIFE: 0</span><span class="pill" id="allCountTop">ALL: 0</span></div><div class="subtabs"><div class="subtab work active" id="chooseMainTab" onclick="setChooseTab('main')">STATUS</div><div class="subtab rest" id="chooseQuickTab" onclick="setChooseTab('quick')">QUICK</div></div>
       <section id="chooseMain" class="subpage work active"><div class="twoCols"><section class="card"><div class="bigAsk">STATUS</div><div class="sliderBox"><label>TIME: <span class="value" id="nowTimeLabel">30min</span></label><input id="nowTime" type="range" min="5" max="300" step="5" value="30" oninput="syncLabels()"><div class="ticks"><span>5m</span><span>30m</span><span>1h</span><span>2h</span><span>4h</span><span>6h</span><span>1day+</span></div></div><div class="sliderBox energy"><label>ENERGY: <span class="value" id="nowEnergyLabel">3</span> / 5</label><input id="nowEnergy" type="range" min="1" max="5" step="1" value="3" oninput="syncLabels()"><div class="energyTicks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div><button class="full" onclick="chooseTask()">NOW!</button></section><section class="card"><div class="bigAsk">RESULT</div><div class="result" id="result"><div class="empty">Press NOW.<br>It checks urgent first,<br>then important,<br>then work/study.</div></div></section></div></section>
       <section id="chooseQuick" class="subpage rest"><div class="card"><div class="bigAsk">QUICK LOG</div><div class="fishHint">These are quick 10-min logs. They do not enter the task pool.</div><div id="quickList" class="quickChips"></div></div></section>
     </main>
-    <main id="addPage" class="page"><div class="subtabs"><div class="subtab work active" id="addWorkTab" onclick="setTaskType('work')">WORK</div><div class="subtab rest" id="addRestTab" onclick="setTaskType('rest')">LIFE</div></div><section id="addSubpage" class="subpage work active"><div class="card"><label>TASK NAME</label><div class="nameLine"><input id="taskName" type="text" placeholder="homework / drawing / shower / phone"/><button class="quickSmall" onclick="addQuickFromName()">ADD QUICK</button></div><div class="sliderBox"><label>EST. TIME: <span class="value" id="taskTimeLabel">30min</span></label><input id="taskTime" type="range" min="5" max="300" step="5" value="30" oninput="syncLabels()"><div class="ticks"><span>5m</span><span>30m</span><span>1h</span><span>2h</span><span>4h</span><span>6h</span><span>1day+</span></div></div><div class="sliderBox energy"><label>ENERGY COST: <span class="value" id="taskEnergyLabel">3</span> / 5</label><input id="taskEnergy" type="range" min="1" max="5" step="1" value="3" oninput="syncLabels()"><div class="energyTicks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div><label>URGENCY X IMPORTANCE</label><div class="priorityArea"><div class="yAxis"><span>IMP ↑</span></div><div class="priorityPad" id="priorityPad" onclick="setPriorityFromEvent(event)" ontouchstart="setPriorityFromEvent(event)" ontouchmove="setPriorityFromEvent(event)"><div class="gridLineV1"></div><div class="gridLineV2"></div><div class="gridLineH1"></div><div class="gridLineH2"></div><div class="dot" id="priorityDot"></div></div><div></div><div class="xAxis">URG →</div></div><div class="priorityHint">NOW: URG <span id="urgencyLabel">50</span>% / IMP <span id="importanceLabel">50</span>%. Click anywhere.</div><button class="full" onclick="addTask()">ADD TO POOL</button></div></section></main>
+    <main id="addPage" class="page"><div class="subtabs"><div class="subtab work active" id="addWorkTab" onclick="setTaskType('work')">WORK</div><div class="subtab rest" id="addRestTab" onclick="setTaskType('rest')">LIFE</div></div><section id="addSubpage" class="subpage work active"><div class="card"><label>TASK NAME</label><div class="nameLine"><input id="taskName" type="text" placeholder="homework / drawing / shower / phone"/><button class="quickSmall" onclick="addQuickFromName()">ADD QUICK</button></div><div class="sliderBox"><label>EST. TIME: <span class="value" id="taskTimeLabel">30min</span></label><input id="taskTime" type="range" min="5" max="300" step="5" value="30" oninput="syncLabels()"><div class="ticks"><span>5m</span><span>30m</span><span>1h</span><span>2h</span><span>4h</span><span>6h</span><span>1day+</span></div></div><div class="sliderBox energy"><label>ENERGY COST: <span class="value" id="taskEnergyLabel">3</span> / 5</label><input id="taskEnergy" type="range" min="1" max="5" step="1" value="3" oninput="syncLabels()"><div class="energyTicks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div><label>URGENCY X IMPORTANCE</label><div class="priorityArea"><div class="yAxis"><span>IMP â</span></div><div class="priorityPad" id="priorityPad" onclick="setPriorityFromEvent(event)" ontouchstart="setPriorityFromEvent(event)" ontouchmove="setPriorityFromEvent(event)"><div class="gridLineV1"></div><div class="gridLineV2"></div><div class="gridLineH1"></div><div class="gridLineH2"></div><div class="dot" id="priorityDot"></div></div><div></div><div class="xAxis">URG â</div></div><div class="priorityHint">NOW: URG <span id="urgencyLabel">50</span>% / IMP <span id="importanceLabel">50</span>%. Click anywhere.</div><button class="full" onclick="addTask()">ADD TO POOL</button></div></section></main>
     <main id="poolPage" class="page"><div class="stats"><span class="pill" id="workCount">WORK: 0</span><span class="pill" id="restCount">LIFE: 0</span><span class="pill" id="allCount">ALL: 0</span></div><div class="subtabs"><div class="subtab work active" id="poolWorkTab" onclick="setPoolTab('work')">WORK</div><div class="subtab rest" id="poolRestTab" onclick="setPoolTab('rest')">LIFE</div></div><section id="poolSubpage" class="subpage work active"><div class="card"><div id="taskList"></div></div><button class="danger full" onclick="clearTasks()">CLEAR POOL</button></section></main>
   </div></div></div>
 </div>
-<div class="modal" id="calendarModal" onclick="closeCalendarBg(event)"><div class="modalBox"><div class="modalHead"><h2>TIMELINE</h2><button class="closeX" onclick="closeCalendar()">×</button></div><div class="stats"><span class="pill slimPill" id="logCount">LOGS: 0</span><button class="danger slimBtn" onclick="clearLogs()">CLEAR</button><span class="spacer"></span><button class="secondary slimBtn" id="viewToggle" onclick="toggleCalendarView()">WEEK</button></div><div id="calendarMonth"></div><div id="weekPlanner"></div><div class="dayTimeline" id="dayTimeline"></div></div></div>
+<div class="modal" id="calendarModal" onclick="closeCalendarBg(event)"><div class="modalBox"><div class="modalHead"><h2>TIMELINE</h2><button class="closeX" onclick="closeCalendar()">Ã</button></div><div class="stats"><span class="pill slimPill" id="logCount">LOGS: 0</span><button class="danger slimBtn" onclick="clearLogs()">CLEAR</button><span class="spacer"></span><button class="secondary slimBtn" id="viewToggle" onclick="toggleCalendarView()">WEEK</button></div><div id="calendarMonth"></div><div id="weekPlanner"></div><div class="dayTimeline" id="dayTimeline"></div></div></div>
 <div class="popover" id="eventPopover"><div class="popTitle">SCHEDULE TASK</div><div class="popSmall">Long-press a day. Pick an existing task and pin it to that day.</div><div class="existingTasks" id="existingTaskList"></div><div class="popActions"><button class="secondary" onclick="closePopovers()">CANCEL</button></div></div>
 <script>
 let tasks=JSON.parse(localStorage.getItem("nowDoTasksV16")||"[]");let quicks=JSON.parse(localStorage.getItem("nowDoQuicksV16")||"[]");let logs=JSON.parse(localStorage.getItem("nowDoLogsV16")||"[]");let plans=JSON.parse(localStorage.getItem("nowDoPlansV16")||"[]");let currentTaskType="work",poolTab="work",chooseTab="main";let urgency=.5,importance=.5;let selectedCalendarDate=new Date();let calendarView="month",popoverDate=new Date(),pressTimer=null,longPressFired=false,lastTapTime=0,lastTapKey="";
 function $(id){return document.getElementById(id)}function save(){localStorage.setItem("nowDoTasksV16",JSON.stringify(tasks));localStorage.setItem("nowDoQuicksV16",JSON.stringify(quicks));localStorage.setItem("nowDoLogsV16",JSON.stringify(logs));localStorage.setItem("nowDoPlansV16",JSON.stringify(plans))}function updateTopDate(){const d=new Date();$("topDate").textContent=d.toLocaleDateString("en-CA",{month:"2-digit",day:"2-digit"})+" "+d.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})}function showToast(text){let t=$("toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t)}t.textContent=text;t.classList.add("active");setTimeout(()=>t.classList.remove("active"),2200)}
 function openPage(pageId){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));$(pageId).classList.add("active");document.querySelector(`.tab[data-page="${pageId}"]`).classList.add("active")}function setChooseTab(tab){chooseTab=tab;$("chooseMainTab").classList.toggle("active",tab==="main");$("chooseQuickTab").classList.toggle("active",tab==="quick");$("chooseMain").classList.toggle("active",tab==="main");$("chooseQuick").classList.toggle("active",tab==="quick")}function setTaskType(type){currentTaskType=type;["work","rest"].forEach(t=>$("add"+cap(t)+"Tab").classList.toggle("active",type===t));$("addSubpage").className="subpage active "+type}function setPoolTab(type){poolTab=type;["work","rest"].forEach(t=>$("pool"+cap(t)+"Tab").classList.toggle("active",type===t));$("poolSubpage").className="subpage active "+type;renderTasks()}function cap(t){return t.charAt(0).toUpperCase()+t.slice(1)}function formatTime(v){let n=Number(v);if(n>=300)return"1day+";if(n>=240)return"4h+";if(n>=180)return"3h";if(n>=120)return"2h";if(n>=60)return Math.round(n/60)+"h";return n+"min"}function syncLabels(){["taskTime","nowTime","taskEnergy","nowEnergy"].forEach(id=>{if(!$(id))return});$("taskTimeLabel").textContent=formatTime($("taskTime").value);$("nowTimeLabel").textContent=formatTime($("nowTime").value);$("taskEnergyLabel").textContent=$("taskEnergy").value;$("nowEnergyLabel").textContent=$("nowEnergy").value}
 function setPriorityFromEvent(e){e.preventDefault();const pad=$("priorityPad"),rect=pad.getBoundingClientRect();const p=e.touches?e.touches[0]:e;let x=Math.max(0,Math.min(1,(p.clientX-rect.left)/rect.width));let y=Math.max(0,Math.min(1,(p.clientY-rect.top)/rect.height));urgency=x;importance=1-y;updateDot()}function updateDot(){$("priorityDot").style.left=urgency*100+"%";$("priorityDot").style.top=(1-importance)*100+"%";$("urgencyLabel").textContent=Math.round(urgency*100);$("importanceLabel").textContent=Math.round(importance*100)}
-function addTask(){const name=$("taskName").value.trim();if(!name){alert("先写一个 TASK NAME!");return}tasks.push({id:Date.now(),name,type:currentTaskType,urgency,importance,time:Number($("taskTime").value),energy:Number($("taskEnergy").value)});$("taskName").value="";save();poolTab=currentTaskType;setPoolTab(poolTab);openPage("poolPage")}function addFishQuick(nameArg){const name=(nameArg||$("taskName").value).trim();if(!name){alert("先写一个 QUICK 名字!");return}if(!quicks.some(q=>q.name===name&&q.type==="fish"))quicks.push({id:Date.now(),name,type:"fish",time:10});save();renderQuicks()}function addQuickFromName(){const name=$("taskName").value.trim();if(!name){alert("先写一个 QUICK 名字!");return}addFishQuick(name);$("taskName").value="";openPage("choosePage");setChooseTab("quick");showToast("已加入 QUICK: "+name+"。点它才会记录到 TIMELINE。")}function addLog(name,type,minutes=10){const start=new Date(),end=new Date(start.getTime()+minutes*60000);logs.push({id:Date.now(),name,type,start:start.toISOString(),end:end.toISOString(),minutes});save();renderCalendar()}function useQuick(id){const q=quicks.find(x=>x.id===id);if(!q)return;addLog(q.name,q.type,q.time||10);selectedCalendarDate=new Date();openCalendar();showToast("LOGS: "+q.name+" (10 min)")}function deleteQuick(id){quicks=quicks.filter(q=>q.id!==id);save();renderQuicks()}function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);save();renderTasks()}function startTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;addLog(item.name,item.type,Math.min(item.time,Number($("nowTime").value)||item.time));tasks=tasks.filter(t=>t.id!==id);save();renderTasks();$("result").innerHTML=`<div class="resultName">STARTED</div><div class="reason">已从现在 START 记录到 TIMELINE，并从任务池移除。</div>`}function clearTasks(){if(confirm("真的要 CLEAR 所有任务吗？")){tasks=[];save();renderTasks()}}
-function comparePriority(a,b){return(b.urgency-a.urgency)||(b.importance-a.importance)||((a.type==="work"?-1:0)-(b.type==="work"?-1:0))||(a.time-b.time)||(a.energy-b.energy)}function chooseTask(){const nowTime=Number($("nowTime").value),nowEnergy=Number($("nowEnergy").value);if(!tasks.length){$("result").innerHTML=`<div class="empty">Task pool is empty. Add something first.</div>`;return}let possible=tasks.filter(t=>t.time<=nowTime&&t.energy<=nowEnergy);if(!possible.length){const target=[...tasks].sort((a,b)=>(b.urgency-a.urgency)||(b.importance-a.importance)||(Math.abs(a.time-nowTime)-Math.abs(b.time-nowTime))||(a.energy-b.energy))[0];$("result").innerHTML=`<div class="resultName">MINI VERSION</div><div class="reason">Try a 5-min version of [${escapeHtml(target.name)}].<br>Open the file / take out the thing / write one line.<br><br><span class="tag">Original: ${typeName(target.type)} · ${formatTime(target.time)} · energy${target.energy}/5 · urg${Math.round(target.urgency*100)}% · imp${Math.round(target.importance*100)}%</span></div>`;return}possible.sort(comparePriority);const c=possible[0];$("result").innerHTML=`<div>DO NOW:</div><div class="resultName">${escapeHtml(c.name)}</div><div class="reason">Do ${formatTime(Math.min(c.time,nowTime))}.<br>推荐逻辑：先 urg，再 imp，再优先 WORK。<br>Type: ${typeName(c.type)}，urg ${Math.round(c.urgency*100)}%，imp ${Math.round(c.importance*100)}%。</div><button class="full" onclick="startTask(${c.id})">START 做，并加到 TIMELINE</button>`}
-function renderTasks(){const work=tasks.filter(t=>t.type==="work").length,rest=tasks.filter(t=>t.type==="rest").length;["workCount","workCountTop"].forEach(id=>$(id)&&($(id).textContent=`WORK: ${work}`));["restCount","restCountTop"].forEach(id=>$(id)&&($(id).textContent=`LIFE: ${rest}`));["allCount","allCountTop"].forEach(id=>$(id)&&($(id).textContent=`ALL: ${work+rest}`));const list=$("taskList");if(!list)return;const shown=tasks.filter(t=>t.type===poolTab).sort(comparePriority);if(!shown.length){list.innerHTML=`<div class="empty">This folder is empty.</div>`;return}list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} · ${formatTime(t.time)} · energy${t.energy}/5 · 急${Math.round(t.urgency*100)}% / 重${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join("")}function renderQuicks(){const list=$("quickList"),shown=quicks.filter(q=>q.type==="fish");if(!shown.length){list.innerHTML=`<div class="empty">还没有 QUICK 快捷项。去 ADD 输入，比如“刷手机”，点“ADD QUICK”。</div>`;return}list.innerHTML=shown.map(q=>`<div class="fishChip"><span>${escapeHtml(q.name)}</span><button onclick="useQuick(${q.id})">+10m</button><button class="danger" onclick="deleteQuick(${q.id})">×</button></div>`).join("")}function typeIcon(t){return t==="work"?"[W]":t==="rest"?"[L]":"[Q]"}function typeName(t){return t==="work"?"WORK":t==="rest"?"LIFE":"QUICK"}
-function openCalendar(){renderCalendar();$("calendarModal").classList.add("active")}function closeCalendar(){$("calendarModal").classList.remove("active")}function closeCalendarBg(e){if(e.target.id==="calendarModal")closeCalendar()}function clearLogs(){if(confirm("CLEAR TIMELINE 记录吗？")){logs=[];save();renderCalendar()}}function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}function renderCalendar(){if(!$("calendarMonth"))return;$("logCount").textContent=`LOGS: ${logs.length}`;const monthBox=$("calendarMonth"),year=selectedCalendarDate.getFullYear(),month=selectedCalendarDate.getMonth();$("viewToggle").textContent=calendarView==="month"?"WEEK":"MONTH";const heads=["S","M","T","W","T","F","S"].map(x=>`<div class="calHead">${x}</div>`).join("");const todayKey=dateKey(new Date()),selectedKey=dateKey(selectedCalendarDate);let cells="";if(calendarView==="month"){const first=new Date(year,month,1),last=new Date(year,month+1,0);for(let i=0;i<first.getDay();i++)cells+=`<div class="calDay emptyDay"></div>`;for(let d=1;d<=last.getDate();d++){const cur=new Date(year,month,d),key=dateKey(cur);const dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key),dayPlans=plans.filter(p=>p.date===key);const dots=[...dayLogs.map(l=>l.type),...dayPlans.map(p=>p.kind==="plan"?"plan":"note")].slice(0,4).map(t=>`<span class="calDot ${t}"></span>`).join("");cells+=`<div class="calDay ${key===selectedKey?"active":""} ${key===todayKey?"today":""}" onclick="handleCalendarClick(event,${year},${month},${d})" ondblclick="startInlineNote(event,${year},${month},${d})" onpointerdown="startLongPress(event,${year},${month},${d})" onpointerup="cancelLongPress()" onpointerleave="cancelLongPress()"><div class="calNum">${d}</div><div class="calDots">${dots}</div>${renderNotePreviews(key)}</div>`}}else{const base=new Date(selectedCalendarDate),sunday=new Date(base);sunday.setDate(base.getDate()-base.getDay());for(let i=0;i<7;i++){const cur=new Date(sunday);cur.setDate(sunday.getDate()+i);const key=dateKey(cur),dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key),dayPlans=plans.filter(p=>p.date===key);const dots=[...dayLogs.map(l=>l.type),...dayPlans.map(p=>p.kind==="plan"?"plan":"note")].slice(0,6).map(t=>`<span class="calDot ${t}"></span>`).join("");cells+=`<div class="calDay ${key===selectedKey?"active":""} ${key===todayKey?"today":""}" onclick="handleCalendarClick(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" ondblclick="startInlineNote(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" onpointerdown="startLongPress(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" onpointerup="cancelLongPress()" onpointerleave="cancelLongPress()" style="min-height:72px"><div class="calNum">${cur.getDate()}</div><div class="calDots">${dots}</div>${renderNotePreviews(key)}</div>`}}monthBox.innerHTML=`<div class="modalHead"><button class="secondary" onclick="changeMonth(-1)">‹</button><h3>${year}/${month+1}</h3><button class="secondary" onclick="changeMonth(1)">›</button></div><div class="calendarGrid">${heads}${cells}</div>`;renderWeekPlanner();renderDayTimeline()}function renderWeekPlanner(){const box=$("weekPlanner");box.innerHTML=calendarView!=="week"?"":`<div style="display:flex;color:var(--muted);font-size:12px;padding:4px 2px 0">Double-tap: note / Long-press: schedule</div>`}function toggleCalendarView(){calendarView=calendarView==="month"?"week":"month";renderCalendar()}function handleCalendarClick(e,y,m,d){if(longPressFired){longPressFired=false;return}const key=dateKey(new Date(y,m,d)),now=Date.now();if(lastTapKey===key&&now-lastTapTime<360){startInlineNote(e,y,m,d);lastTapTime=0;lastTapKey="";return}lastTapKey=key;lastTapTime=now;selectCalendarDay(y,m,d)}function selectCalendarDay(y,m,d){selectedCalendarDate=new Date(y,m,d);renderCalendar()}function startLongPress(e,y,m,d){longPressFired=false;cancelLongPress();pressTimer=setTimeout(()=>{longPressFired=true;openEventForDay(e,y,m,d)},520)}function cancelLongPress(){if(pressTimer){clearTimeout(pressTimer);pressTimer=null}}function startInlineNote(e,y,m,d){e.preventDefault();e.stopPropagation();cancelLongPress();const cell=e.currentTarget,key=dateKey(new Date(y,m,d));if(cell.querySelector(".inlineNote"))return;const input=document.createElement("textarea");input.className="inlineNote";input.rows=2;input.placeholder="note...";input.addEventListener("click",ev=>ev.stopPropagation());input.addEventListener("pointerdown",ev=>ev.stopPropagation());input.addEventListener("keydown",ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();saveInlineNote(input,key)}if(ev.key==="Escape")renderCalendar()});input.addEventListener("blur",()=>{const text=input.value.trim();if(text)saveInlineNote(input,key);else renderCalendar()});cell.appendChild(input);setTimeout(()=>input.focus(),60)}function saveInlineNote(input,key){const text=input.value.trim();if(!text){renderCalendar();return}plans.push({id:Date.now(),date:key,text,kind:"note"});save();renderCalendar();showToast("Note added: "+text)}function renderNotePreviews(key){const ns=plans.filter(p=>p.date===key&&(p.kind||"note")==="note").slice(0,1),ps=plans.filter(p=>p.date===key&&p.kind==="plan").slice(0,2);return ns.map(n=>`<div class="notePreview">NOTE ${escapeHtml(n.text)}</div>`).join("")+ps.map(p=>`<div class="scheduledBadge">OK ${escapeHtml(p.text)}</div>`).join("")}function openEventForDay(e,y,m,d){e.preventDefault();popoverDate=new Date(y,m,d);selectedCalendarDate=new Date(y,m,d);renderExistingTaskPicker();$("eventPopover").classList.add("active")}function renderExistingTaskPicker(){const box=$("existingTaskList");if(!tasks.length){box.innerHTML=`<div class="empty">Task pool is empty. Add tasks first.</div>`;return}const sorted=[...tasks].sort(comparePriority);box.innerHTML=sorted.map(t=>`<button class="pickTask ${t.type}" onclick="scheduleExistingTask(${t.id})">${typeIcon(t.type)} ${escapeHtml(t.name)}<span class="small">${typeName(t.type)} · ${formatTime(t.time)} · energy${t.energy}/5</span></button>`).join("")}function scheduleExistingTask(id){const t=tasks.find(x=>x.id===id);if(!t)return;plans.push({id:Date.now(),date:dateKey(popoverDate),text:t.name,kind:"plan",taskId:t.id,type:t.type,time:t.time,energy:t.energy});save();closePopovers();renderCalendar();showToast("Pinned: "+t.name)}function closePopovers(){$("eventPopover").classList.remove("active")}function changeMonth(delta){if(calendarView==="week")selectedCalendarDate.setDate(selectedCalendarDate.getDate()+delta*7);else selectedCalendarDate=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth()+delta,1);renderCalendar()}function renderDayTimeline(){const box=$("dayTimeline"),key=dateKey(selectedCalendarDate);const dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key).sort((a,b)=>new Date(a.start)-new Date(b.start));const dayPlans=plans.filter(p=>p.date===key);const title=selectedCalendarDate.toLocaleDateString("en-CA",{month:"short",day:"numeric",weekday:"short"});let rows="";for(let h=0;h<=23;h++){const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h),major=h%3===0;rows+=`<div class="hourRow ${major?"major":""}"><div class="hourLabel">${String(h).padStart(2,"0")}:00</div><div class="hourSlot">`;rows+=hourLogs.map(l=>{const s=new Date(l.start),e=new Date(l.end);return`<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})} - ${e.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})} · ${l.minutes}min</div></div>`}).join("");if(h===0)rows+=dayPlans.map(p=>p.kind==="plan"?`<div class="eventBlock plan"><strong>OK ${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||"work")} · ${formatTime(p.time||30)}</div></div>`:`<div class="eventBlock note"><strong>NOTE ${escapeHtml(p.text)}</strong><div class="tag">Note</div></div>`).join("");rows+=`</div></div>`}box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`}function escapeHtml(text){return String(text).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function addTask(){const name=$("taskName").value.trim();if(!name){alert("ååä¸ä¸ª TASK NAME!");return}tasks.push({id:Date.now(),name,type:currentTaskType,urgency,importance,time:Number($("taskTime").value),energy:Number($("taskEnergy").value)});$("taskName").value="";save();poolTab=currentTaskType;setPoolTab(poolTab);openPage("poolPage")}function addFishQuick(nameArg){const name=(nameArg||$("taskName").value).trim();if(!name){alert("ååä¸ä¸ª QUICK åå­!");return}if(!quicks.some(q=>q.name===name&&q.type==="fish"))quicks.push({id:Date.now(),name,type:"fish",time:10});save();renderQuicks()}function addQuickFromName(){const name=$("taskName").value.trim();if(!name){alert("ååä¸ä¸ª QUICK åå­!");return}addFishQuick(name);$("taskName").value="";openPage("choosePage");setChooseTab("quick");showToast("å·²å å¥ QUICK: "+name+"ãç¹å®æä¼è®°å½å° TIMELINEã")}function addLog(name,type,minutes=10){const start=new Date(),end=new Date(start.getTime()+minutes*60000);logs.push({id:Date.now(),name,type,start:start.toISOString(),end:end.toISOString(),minutes});save();renderCalendar()}function useQuick(id){const q=quicks.find(x=>x.id===id);if(!q)return;addLog(q.name,q.type,q.time||10);selectedCalendarDate=new Date();openCalendar();showToast("LOGS: "+q.name+" (10 min)")}function deleteQuick(id){quicks=quicks.filter(q=>q.id!==id);save();renderQuicks()}function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);save();renderTasks()}function startTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;addLog(item.name,item.type,Math.min(item.time,Number($("nowTime").value)||item.time));tasks=tasks.filter(t=>t.id!==id);save();renderTasks();$("result").innerHTML=`<div class="resultName">STARTED</div><div class="reason">å·²ä»ç°å¨ START è®°å½å° TIMELINEï¼å¹¶ä»ä»»å¡æ± ç§»é¤ã</div>`}function clearTasks(){if(confirm("ççè¦ CLEAR ææä»»å¡åï¼")){tasks=[];save();renderTasks()}}
+function comparePriority(a,b){return(b.urgency-a.urgency)||(b.importance-a.importance)||((a.type==="work"?-1:0)-(b.type==="work"?-1:0))||(a.time-b.time)||(a.energy-b.energy)}function chooseTask(){const nowTime=Number($("nowTime").value),nowEnergy=Number($("nowEnergy").value);if(!tasks.length){$("result").innerHTML=`<div class="empty">Task pool is empty. Add something first.</div>`;return}let possible=tasks.filter(t=>t.time<=nowTime&&t.energy<=nowEnergy);if(!possible.length){const target=[...tasks].sort((a,b)=>(b.urgency-a.urgency)||(b.importance-a.importance)||(Math.abs(a.time-nowTime)-Math.abs(b.time-nowTime))||(a.energy-b.energy))[0];$("result").innerHTML=`<div class="resultName">MINI VERSION</div><div class="reason">Try a 5-min version of [${escapeHtml(target.name)}].<br>Open the file / take out the thing / write one line.<br><br><span class="tag">Original: ${typeName(target.type)} Â· ${formatTime(target.time)} Â· energy${target.energy}/5 Â· urg${Math.round(target.urgency*100)}% Â· imp${Math.round(target.importance*100)}%</span></div>`;return}possible.sort(comparePriority);const c=possible[0];$("result").innerHTML=`<div>DO NOW:</div><div class="resultName">${escapeHtml(c.name)}</div><div class="reason">Do ${formatTime(Math.min(c.time,nowTime))}.<br>æ¨èé»è¾ï¼å urgï¼å impï¼åä¼å WORKã<br>Type: ${typeName(c.type)}ï¼urg ${Math.round(c.urgency*100)}%ï¼imp ${Math.round(c.importance*100)}%ã</div><button class="full" onclick="startTask(${c.id})">START åï¼å¹¶å å° TIMELINE</button>`}
+function renderTasks(){const work=tasks.filter(t=>t.type==="work").length,rest=tasks.filter(t=>t.type==="rest").length;["workCount","workCountTop"].forEach(id=>$(id)&&($(id).textContent=`WORK: ${work}`));["restCount","restCountTop"].forEach(id=>$(id)&&($(id).textContent=`LIFE: ${rest}`));["allCount","allCountTop"].forEach(id=>$(id)&&($(id).textContent=`ALL: ${work+rest}`));const list=$("taskList");if(!list)return;const shown=tasks.filter(t=>t.type===poolTab).sort(comparePriority);if(!shown.length){list.innerHTML=`<div class="empty">This folder is empty.</div>`;return}list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} Â· ${formatTime(t.time)} Â· energy${t.energy}/5 Â· æ¥${Math.round(t.urgency*100)}% / é${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join("")}function renderQuicks(){const list=$("quickList"),shown=quicks.filter(q=>q.type==="fish");if(!shown.length){list.innerHTML=`<div class="empty">è¿æ²¡æ QUICK å¿«æ·é¡¹ãå» ADD è¾å¥ï¼æ¯å¦âå·ææºâï¼ç¹âADD QUICKâã</div>`;return}list.innerHTML=shown.map(q=>`<div class="fishChip"><span>${escapeHtml(q.name)}</span><button onclick="useQuick(${q.id})">+10m</button><button class="danger" onclick="deleteQuick(${q.id})">Ã</button></div>`).join("")}function typeIcon(t){return t==="work"?"[W]":t==="rest"?"[L]":"[Q]"}function typeName(t){return t==="work"?"WORK":t==="rest"?"LIFE":"QUICK"}
+function openCalendar(){renderCalendar();$("calendarModal").classList.add("active")}function closeCalendar(){$("calendarModal").classList.remove("active")}function closeCalendarBg(e){if(e.target.id==="calendarModal")closeCalendar()}function clearLogs(){if(confirm("CLEAR TIMELINE è®°å½åï¼")){logs=[];save();renderCalendar()}}function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}function renderCalendar(){if(!$("calendarMonth"))return;$("logCount").textContent=`LOGS: ${logs.length}`;const monthBox=$("calendarMonth"),year=selectedCalendarDate.getFullYear(),month=selectedCalendarDate.getMonth();$("viewToggle").textContent=calendarView==="month"?"WEEK":"MONTH";const heads=["S","M","T","W","T","F","S"].map(x=>`<div class="calHead">${x}</div>`).join("");const todayKey=dateKey(new Date()),selectedKey=dateKey(selectedCalendarDate);let cells="";if(calendarView==="month"){const first=new Date(year,month,1),last=new Date(year,month+1,0);for(let i=0;i<first.getDay();i++)cells+=`<div class="calDay emptyDay"></div>`;for(let d=1;d<=last.getDate();d++){const cur=new Date(year,month,d),key=dateKey(cur);const dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key),dayPlans=plans.filter(p=>p.date===key);const dots=[...dayLogs.map(l=>l.type),...dayPlans.map(p=>p.kind==="plan"?"plan":"note")].slice(0,4).map(t=>`<span class="calDot ${t}"></span>`).join("");cells+=`<div class="calDay ${key===selectedKey?"active":""} ${key===todayKey?"today":""}" onclick="handleCalendarClick(event,${year},${month},${d})" ondblclick="startInlineNote(event,${year},${month},${d})" onpointerdown="startLongPress(event,${year},${month},${d})" onpointerup="cancelLongPress()" onpointerleave="cancelLongPress()"><div class="calNum">${d}</div><div class="calDots">${dots}</div>${renderNotePreviews(key)}</div>`}}else{const base=new Date(selectedCalendarDate),sunday=new Date(base);sunday.setDate(base.getDate()-base.getDay());for(let i=0;i<7;i++){const cur=new Date(sunday);cur.setDate(sunday.getDate()+i);const key=dateKey(cur),dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key),dayPlans=plans.filter(p=>p.date===key);const dots=[...dayLogs.map(l=>l.type),...dayPlans.map(p=>p.kind==="plan"?"plan":"note")].slice(0,6).map(t=>`<span class="calDot ${t}"></span>`).join("");cells+=`<div class="calDay ${key===selectedKey?"active":""} ${key===todayKey?"today":""}" onclick="handleCalendarClick(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" ondblclick="startInlineNote(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" onpointerdown="startLongPress(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" onpointerup="cancelLongPress()" onpointerleave="cancelLongPress()" style="min-height:72px"><div class="calNum">${cur.getDate()}</div><div class="calDots">${dots}</div>${renderNotePreviews(key)}</div>`}}monthBox.innerHTML=`<div class="modalHead"><button class="secondary" onclick="changeMonth(-1)">â¹</button><h3>${year}/${month+1}</h3><button class="secondary" onclick="changeMonth(1)">âº</button></div><div class="calendarGrid">${heads}${cells}</div>`;renderWeekPlanner();renderDayTimeline()}function renderWeekPlanner(){const box=$("weekPlanner");box.innerHTML=calendarView!=="week"?"":`<div style="display:flex;color:var(--muted);font-size:12px;padding:4px 2px 0">Double-tap: note / Long-press: schedule</div>`}function toggleCalendarView(){calendarView=calendarView==="month"?"week":"month";renderCalendar()}function handleCalendarClick(e,y,m,d){if(longPressFired){longPressFired=false;return}const key=dateKey(new Date(y,m,d)),now=Date.now();if(lastTapKey===key&&now-lastTapTime<360){startInlineNote(e,y,m,d);lastTapTime=0;lastTapKey="";return}lastTapKey=key;lastTapTime=now;selectCalendarDay(y,m,d)}function selectCalendarDay(y,m,d){selectedCalendarDate=new Date(y,m,d);renderCalendar()}function startLongPress(e,y,m,d){longPressFired=false;cancelLongPress();pressTimer=setTimeout(()=>{longPressFired=true;openEventForDay(e,y,m,d)},520)}function cancelLongPress(){if(pressTimer){clearTimeout(pressTimer);pressTimer=null}}function startInlineNote(e,y,m,d){e.preventDefault();e.stopPropagation();cancelLongPress();const cell=e.currentTarget,key=dateKey(new Date(y,m,d));if(cell.querySelector(".inlineNote"))return;const input=document.createElement("textarea");input.className="inlineNote";input.rows=2;input.placeholder="note...";input.addEventListener("click",ev=>ev.stopPropagation());input.addEventListener("pointerdown",ev=>ev.stopPropagation());input.addEventListener("keydown",ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();saveInlineNote(input,key)}if(ev.key==="Escape")renderCalendar()});input.addEventListener("blur",()=>{const text=input.value.trim();if(text)saveInlineNote(input,key);else renderCalendar()});cell.appendChild(input);setTimeout(()=>input.focus(),60)}function saveInlineNote(input,key){const text=input.value.trim();if(!text){renderCalendar();return}plans.push({id:Date.now(),date:key,text,kind:"note"});save();renderCalendar();showToast("Note added: "+text)}function renderNotePreviews(key){const ns=plans.filter(p=>p.date===key&&(p.kind||"note")==="note").slice(0,1),ps=plans.filter(p=>p.date===key&&p.kind==="plan").slice(0,2);return ns.map(n=>`<div class="notePreview">NOTE ${escapeHtml(n.text)}</div>`).join("")+ps.map(p=>`<div class="scheduledBadge">OK ${escapeHtml(p.text)}</div>`).join("")}function openEventForDay(e,y,m,d){e.preventDefault();popoverDate=new Date(y,m,d);selectedCalendarDate=new Date(y,m,d);renderExistingTaskPicker();$("eventPopover").classList.add("active")}function renderExistingTaskPicker(){const box=$("existingTaskList");if(!tasks.length){box.innerHTML=`<div class="empty">Task pool is empty. Add tasks first.</div>`;return}const sorted=[...tasks].sort(comparePriority);box.innerHTML=sorted.map(t=>`<button class="pickTask ${t.type}" onclick="scheduleExistingTask(${t.id})">${typeIcon(t.type)} ${escapeHtml(t.name)}<span class="small">${typeName(t.type)} Â· ${formatTime(t.time)} Â· energy${t.energy}/5</span></button>`).join("")}function scheduleExistingTask(id){const t=tasks.find(x=>x.id===id);if(!t)return;plans.push({id:Date.now(),date:dateKey(popoverDate),text:t.name,kind:"plan",taskId:t.id,type:t.type,time:t.time,energy:t.energy});save();closePopovers();renderCalendar();showToast("Pinned: "+t.name)}function closePopovers(){$("eventPopover").classList.remove("active")}function changeMonth(delta){if(calendarView==="week")selectedCalendarDate.setDate(selectedCalendarDate.getDate()+delta*7);else selectedCalendarDate=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth()+delta,1);renderCalendar()}function renderDayTimeline(){const box=$("dayTimeline"),key=dateKey(selectedCalendarDate);const dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key).sort((a,b)=>new Date(a.start)-new Date(b.start));const dayPlans=plans.filter(p=>p.date===key);const title=selectedCalendarDate.toLocaleDateString("en-CA",{month:"short",day:"numeric",weekday:"short"});let rows="";for(let h=0;h<=23;h++){const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h),major=h%3===0;rows+=`<div class="hourRow ${major?"major":""}"><div class="hourLabel">${String(h).padStart(2,"0")}:00</div><div class="hourSlot">`;rows+=hourLogs.map(l=>{const s=new Date(l.start),e=new Date(l.end);return`<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})} - ${e.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})} Â· ${l.minutes}min</div></div>`}).join("");if(h===0)rows+=dayPlans.map(p=>p.kind==="plan"?`<div class="eventBlock plan"><strong>OK ${escapeHtml(p.text)}</strong><div class="tag">Pinned Â· ${typeName(p.type||"work")} Â· ${formatTime(p.time||30)}</div></div>`:`<div class="eventBlock note"><strong>NOTE ${escapeHtml(p.text)}</strong><div class="tag">Note</div></div>`).join("");rows+=`</div></div>`}box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`}function escapeHtml(text){return String(text).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function bindControls(){["taskTime","nowTime","taskEnergy","nowEnergy"].forEach(id=>{const el=$(id);if(el){el.addEventListener("input",syncLabels);el.addEventListener("change",syncLabels);el.addEventListener("touchmove",syncLabels,{passive:true});el.addEventListener("pointermove",syncLabels)}});document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>openPage(tab.dataset.page)))}bindControls();syncLabels();updateDot();renderTasks();renderQuicks();updateTopDate();setInterval(updateTopDate,30000);
 
 
@@ -1327,7 +1336,7 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
 
 <style id="v2-12-final-position-fix">
 /* =========================================================
-   v2.12 — exact requested code tweaks only
+   v2.12 â exact requested code tweaks only
    - slightly shrink white base plate so clear case shows again
    - move left D-pad upward like the preview position
    - ADD page: put URGENCY X IMPORTANCE above the NOW hint on right
@@ -1442,7 +1451,7 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
 
 <style id="v2-13-shell-fit-and-calendar-timeline">
 /* =========================================================
-   v2.13 — shell fit + calendar timeline restore
+   v2.13 â shell fit + calendar timeline restore
    Keep v2.12 layout. Only refine the clear acrylic shell and
    restore the timeline area inside the in-screen calendar.
    ========================================================= */
@@ -1801,10 +1810,10 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
       rows += `<div class="hourRow ${major?'major':''}"><div class="hourLabel">${String(h).padStart(2,'0')}:00</div><div class="hourSlot">`;
       rows += hourLogs.map(l => {
         const s = new Date(l.start), e = new Date(l.end);
-        return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${e.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} · ${l.minutes}min</div></div>`;
+        return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${e.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} Â· ${l.minutes}min</div></div>`;
       }).join('');
       if(h === 0){
-        rows += dayPlans.map(p => `<div class="eventBlock plan"><strong>OK ${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||'work')} · ${formatTime(p.time||30)}</div></div>`).join('');
+        rows += dayPlans.map(p => `<div class="eventBlock plan"><strong>OK ${escapeHtml(p.text)}</strong><div class="tag">Pinned Â· ${typeName(p.type||'work')} Â· ${formatTime(p.time||30)}</div></div>`).join('');
       }
       rows += `</div></div>`;
     }
@@ -2397,7 +2406,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
         <div class="now-result-name">${escapeHtml(c.name)}</div>
         <div class="now-result-reason">${mini?'Try a 5-min version. Open it / prepare it / do one tiny step.':'Do '+formatTime(Math.min(c.time,nowTime))+'. Priority: urgent, then important, then work/life.'}<br>Type: ${typeName(c.type)}, urg ${Math.round(c.urgency*100)}%, imp ${Math.round(c.importance*100)}%.</div>
       </div>
-      <button class="full" onclick="startTask(${c.id})">START 做，<br>并加到 TIMELINE</button>
+      <button class="full" onclick="startTask(${c.id})">START åï¼<br>å¹¶å å° TIMELINE</button>
     </div>`;
   };
   window.startTask = function(id){
@@ -2407,7 +2416,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     tasks=(tasks||[]).filter(t=>t.id!==id);
     save(); renderTasks();
     const box=document.getElementById('result');
-    if(box) box.innerHTML='<div class="empty">STARTED. 已记录到 TIMELINE，并从任务池移除。</div>';
+    if(box) box.innerHTML='<div class="empty">STARTED. å·²è®°å½å° TIMELINEï¼å¹¶ä»ä»»å¡æ± ç§»é¤ã</div>';
   };
 
   // note: one note per day, editable; delete by leaving it empty
@@ -2450,8 +2459,8 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     for(let h=0;h<=23;h++){
       const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h), major=h%3===0;
       rows+=`<div class="hourRow ${major?'major':''}"><div class="hourLabel">${String(h).padStart(2,'0')}:00</div><div class="hourSlot">`;
-      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||'work')} · ${formatTime(p.time||30)}</div></div>`).join('');
-      rows+=hourLogs.map(l=>{const s=new Date(l.start),en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} · ${l.minutes}min</div></div>`}).join('');
+      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned Â· ${typeName(p.type||'work')} Â· ${formatTime(p.time||30)}</div></div>`).join('');
+      rows+=hourLogs.map(l=>{const s=new Date(l.start),en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} Â· ${l.minutes}min</div></div>`}).join('');
       rows+='</div></div>';
     }
     box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`;
@@ -2579,7 +2588,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     document.getElementById('allCount').textContent='ALL: '+(work+rest);
     const shown=(tasks||[]).filter(t=>t.type===currentPoolType()).sort(comparePriority);
     if(!shown.length){list.innerHTML='<div class="empty">This folder is empty.</div>';return;}
-    list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} · ${formatTime(t.time)} · energy ${t.energy}/5 · urg ${Math.round(t.urgency*100)}% / imp ${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join('');
+    list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} Â· ${formatTime(t.time)} Â· energy ${t.energy}/5 Â· urg ${Math.round(t.urgency*100)}% / imp ${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join('');
   };
 
   function chooseCandidate(){
@@ -2597,7 +2606,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     const nowTime=Number(document.getElementById('nowTime')?.value || c.time);
     const nowEnergy=Number(document.getElementById('nowEnergy')?.value || 3);
     const mini=c.time>nowTime || c.energy>nowEnergy;
-    box.innerHTML=`<div class="now-result-clean"><div class="now-result-copy"><div class="now-result-kicker">${mini?'MINI VERSION':'DO NOW:'}</div><div class="now-result-name">${escapeHtml(c.name)}</div><div class="now-result-reason">${mini?'Try a 5-min version. Open it, prepare it, or do one tiny step.':'Do '+formatTime(Math.min(c.time,nowTime))+'. Priority: urgent, then important.'}<br>Type: ${typeName(c.type)} · urg ${Math.round(c.urgency*100)}% · imp ${Math.round(c.importance*100)}%</div></div><button class="full" onclick="startTask(${c.id})">START<br>TIMELINE</button></div>`;
+    box.innerHTML=`<div class="now-result-clean"><div class="now-result-copy"><div class="now-result-kicker">${mini?'MINI VERSION':'DO NOW:'}</div><div class="now-result-name">${escapeHtml(c.name)}</div><div class="now-result-reason">${mini?'Try a 5-min version. Open it, prepare it, or do one tiny step.':'Do '+formatTime(Math.min(c.time,nowTime))+'. Priority: urgent, then important.'}<br>Type: ${typeName(c.type)} Â· urg ${Math.round(c.urgency*100)}% Â· imp ${Math.round(c.importance*100)}%</div></div><button class="full" onclick="startTask(${c.id})">START<br>TIMELINE</button></div>`;
   };
   window.startTask=function(id){
     const item=(tasks||[]).find(t=>t.id===id); if(!item)return;
@@ -2620,8 +2629,8 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     for(let h=0;h<=23;h++){
       const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h), major=h%3===0;
       rows+=`<div class="hourRow ${major?'major':''}"><div class="hourLabel">${String(h).padStart(2,'0')}:00</div><div class="hourSlot">`;
-      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||'work')} · ${formatTime(p.time||30)}</div></div>`).join('');
-      rows+=hourLogs.map(l=>{const st=new Date(l.start), en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${st.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} · ${l.minutes}min</div></div>`}).join('');
+      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned Â· ${typeName(p.type||'work')} Â· ${formatTime(p.time||30)}</div></div>`).join('');
+      rows+=hourLogs.map(l=>{const st=new Date(l.start), en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${st.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} Â· ${l.minutes}min</div></div>`}).join('');
       rows+='</div></div>';
     }
     box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`;
@@ -2774,7 +2783,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     const type=activePoolType();
     const shown=(tasks||[]).filter(t=>t.type===type).sort(comparePriority);
     if(!shown.length){list.innerHTML='<div class="empty">This folder is empty.</div>'; return;}
-    list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} · ${formatTime(t.time)} · energy ${t.energy}/5 · urg ${Math.round(t.urgency*100)}% / imp ${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join('');
+    list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} Â· ${formatTime(t.time)} Â· energy ${t.energy}/5 Â· urg ${Math.round(t.urgency*100)}% / imp ${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join('');
   };
 
   window.addTask=function(){
@@ -2797,7 +2806,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     const list=document.getElementById('quickList'); if(!list) return;
     const shown=(quicks||[]).filter(q=>q.type==='fish');
     if(!shown.length){list.innerHTML='<div class="empty">No quick items yet. Add one from the ADD page.</div>'; return;}
-    list.innerHTML=shown.map(q=>`<div class="fishChip"><span>${escapeHtml(q.name)}</span><button onclick="useQuick(${q.id})">+10m</button><button class="danger" onclick="deleteQuick(${q.id})">×</button></div>`).join('');
+    list.innerHTML=shown.map(q=>`<div class="fishChip"><span>${escapeHtml(q.name)}</span><button onclick="useQuick(${q.id})">+10m</button><button class="danger" onclick="deleteQuick(${q.id})">Ã</button></div>`).join('');
   };
 
   window.chooseTask=function(){
@@ -2809,7 +2818,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     let mini=false;
     if(!possible.length){possible=[...tasks]; mini=true;}
     const c=[...possible].sort(comparePriority)[0];
-    box.innerHTML=`<div class="now-result-clean-final"><div class="copy"><div class="kicker">${mini?'MINI VERSION':'DO NOW:'}</div><div class="name">${escapeHtml(c.name)}</div><div class="reason">${mini?'Try a 5-minute version.':'Do '+formatTime(Math.min(c.time,nowTime))+'.'}<br>Priority: urgent, then important.<br>Type: ${typeName(c.type)} · urg ${Math.round(c.urgency*100)}% · imp ${Math.round(c.importance*100)}%</div></div><button class="full" onclick="startTask(${c.id})">START<br>TIMELINE</button></div>`;
+    box.innerHTML=`<div class="now-result-clean-final"><div class="copy"><div class="kicker">${mini?'MINI VERSION':'DO NOW:'}</div><div class="name">${escapeHtml(c.name)}</div><div class="reason">${mini?'Try a 5-minute version.':'Do '+formatTime(Math.min(c.time,nowTime))+'.'}<br>Priority: urgent, then important.<br>Type: ${typeName(c.type)} Â· urg ${Math.round(c.urgency*100)}% Â· imp ${Math.round(c.importance*100)}%</div></div><button class="full" onclick="startTask(${c.id})">START<br>TIMELINE</button></div>`;
   };
   window.startTask=function(id){
     const item=(tasks||[]).find(t=>t.id===id); if(!item) return;
@@ -2889,8 +2898,8 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     for(let h=0;h<=23;h++){
       const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h), major=h%3===0;
       rows+=`<div class="hourRow ${major?'major':''}"><div class="hourLabel">${String(h).padStart(2,'0')}:00</div><div class="hourSlot">`;
-      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||'work')} · ${formatTime(p.time||30)}</div></div>`).join('');
-      rows+=hourLogs.map(l=>{const s=new Date(l.start),en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} · ${l.minutes}min</div></div>`}).join('');
+      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned Â· ${typeName(p.type||'work')} Â· ${formatTime(p.time||30)}</div></div>`).join('');
+      rows+=hourLogs.map(l=>{const s=new Date(l.start),en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} Â· ${l.minutes}min</div></div>`}).join('');
       rows+='</div></div>';
     }
     box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`;
@@ -2926,14 +2935,21 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
 </style>
 
 
-<style id="v2-23-ipad9-actual-bigger-final">
-/* v2.23 — iPad 9 fullscreen actual size fix.
-   Do NOT change UI layout. It only enlarges the fixed 1280x960 stage
-   and lets the useless outer dark margin crop away. */
-html,body{
+<style id="v2-24-ipad9-fit-and-pwa-final">
+/* v2.24 â iPad 9 PWA fit patch
+   Goal: keep the full clear handheld visible, no harsh crop.
+   On iPad 9 landscape PWA, the visible shell should sit close to the edges
+   with about 3â4mm breathing room on left/right. */
+html, body{
   width:100%!important;
   height:100%!important;
+  min-height:100%!important;
+  margin:0!important;
+  padding:0!important;
   overflow:hidden!important;
+  overscroll-behavior:none!important;
+  touch-action:manipulation;
+  background:radial-gradient(ellipse at 50% 42%,#3b3f47 0%,#23272e 58%,#171a20 100%)!important;
 }
 body{
   position:fixed!important;
@@ -2942,8 +2958,6 @@ body{
   align-items:center!important;
   justify-content:center!important;
 }
-
-/* Keep the same internal coordinate system; size change happens only by transform. */
 .console{
   width:1280px!important;
   height:960px!important;
@@ -2952,54 +2966,93 @@ body{
   min-height:960px!important;
   max-height:960px!important;
   flex:0 0 auto!important;
-  transform-origin:center center!important;
   margin:0!important;
+  transform-origin:center center!important;
   will-change:transform!important;
 }
+/* iPad/PWA final fit:
+   Uses the visible acrylic shell box, not the invisible 1280px canvas.
+   This prevents the "postage stamp" effect without slicing the device body. */
+@supports (height: 100dvh){
+  body{height:100dvh!important;}
+}
 </style>
-
-<script id="v2-23-ipad9-actual-bigger-final-js">
+<script id="v2-24-ipad9-fit-and-pwa-final">
 (function(){
-  const STAGE_W = 1280;
-  const STAGE_H = 960;
+  var STAGE_W = 1280;
+  var STAGE_H = 960;
 
-  /* 1.24 is intentional:
-     normal contain-scale on iPad 9 is 810/960 = 0.84375.
-     0.84375 * 1.24 = about 1.046, so the handheld becomes visibly larger
-     and only the unnecessary outer dark margin gets cropped. */
-  const EXTRA_ZOOM = 1.24;
+  /* The actual visible clear shell in the current art starts around
+     x=48 and ends around x=1232; y=112 to y=834.
+     Fit that visible shell with a small safe margin instead of fitting the
+     invisible full canvas. */
+  var VISIBLE_W = 1184;  // 1280 - 48 - 48
+  var VISIBLE_H = 722;   // 960 - 112 - 126
 
-  function fitStageActuallyBigger(){
-    const c = document.querySelector('.console');
+  function viewportSize(){
+    var vv = window.visualViewport;
+    return {
+      w: vv ? vv.width : window.innerWidth,
+      h: vv ? vv.height : window.innerHeight
+    };
+  }
+
+  function fitNOWDO(){
+    var c = document.querySelector('.console');
     if(!c) return;
 
-    const vw = window.innerWidth || document.documentElement.clientWidth;
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    const base = Math.min(vw / STAGE_W, vh / STAGE_H);
-    const scale = base * EXTRA_ZOOM;
+    var vp = viewportSize();
+    var isIPadish = Math.min(vp.w, vp.h) >= 700 && Math.max(vp.w, vp.h) <= 1200;
 
-    c.style.transform = 'scale(' + scale + ')';
+    /* 3â4mm on iPad 9 is roughly 14â18 CSS px.
+       Use a slightly wider margin in Safari browser, smaller in installed PWA. */
+    var standalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+    var sideMargin = standalone ? 14 : 18;
+    var topMargin = standalone ? 10 : 14;
+
+    var fitByVisibleShell = Math.min(
+      (vp.w - sideMargin * 2) / VISIBLE_W,
+      (vp.h - topMargin * 2) / VISIBLE_H
+    );
+
+    /* Avoid monster scale on desktop, but let iPad 9 become actually large. */
+    var maxScale = isIPadish ? 0.895 : 1.0;
+    var s = Math.min(fitByVisibleShell, maxScale);
+
+    /* If the old v2.10 fitter already ran, overwrite it every time. */
+    c.style.transform = 'scale(' + s.toFixed(4) + ')';
     c.style.transformOrigin = 'center center';
 
-    document.documentElement.style.width = vw + 'px';
-    document.documentElement.style.height = vh + 'px';
-    document.body.style.width = vw + 'px';
-    document.body.style.height = vh + 'px';
+    document.documentElement.style.width = vp.w + 'px';
+    document.documentElement.style.height = vp.h + 'px';
+    document.body.style.width = vp.w + 'px';
+    document.body.style.height = vp.h + 'px';
   }
 
-  window.addEventListener('resize', fitStageActuallyBigger, {passive:true});
-  window.addEventListener('orientationchange', function(){
-    setTimeout(fitStageActuallyBigger, 80);
-    setTimeout(fitStageActuallyBigger, 260);
-  }, {passive:true});
-
+  window.addEventListener('resize', fitNOWDO, {passive:true});
+  window.addEventListener('orientationchange', function(){ setTimeout(fitNOWDO, 80); }, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', fitNOWDO, {passive:true});
+    window.visualViewport.addEventListener('scroll', fitNOWDO, {passive:true});
+  }
   if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', fitStageActuallyBigger);
+    document.addEventListener('DOMContentLoaded', fitNOWDO);
   }else{
-    fitStageActuallyBigger();
+    fitNOWDO();
   }
-  setTimeout(fitStageActuallyBigger, 80);
-  setTimeout(fitStageActuallyBigger, 350);
+  setTimeout(fitNOWDO, 100);
+  setTimeout(fitNOWDO, 500);
+})();
+</script>
+<script id="nowdo-pwa-register">
+(function(){
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./sw.js').catch(function(err){
+        console.warn('NOWDO service worker registration failed:', err);
+      });
+    });
+  }
 })();
 </script>
 
