@@ -2900,5 +2900,30 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
 })();
 </script>
 
+
+
+<style id="v2-22-only-two-micro-fixes">
+/* ONLY these two changes:
+   1) restore the small number inside the ENERGY value box
+   2) move the whole inner LCD slightly left without resizing it
+*/
+#nowEnergyLabel,
+#taskEnergyLabel{
+  font-size:11px!important;
+  line-height:1!important;
+  min-width:38px!important;
+  padding:1px 5px!important;
+  font-family:"Courier New",monospace!important;
+  font-weight:900!important;
+}
+.energyDenomFinal{
+  font-size:14px!important;
+}
+.screen{
+  left:19.75%!important;
+  right:19.15%!important;
+}
+</style>
+
 </body>
 </html>
