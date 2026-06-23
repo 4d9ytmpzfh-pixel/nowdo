@@ -743,7 +743,7 @@ button.full{height:34px!important;margin:9px 0 0!important;width:100%!important;
   <div class="selectStart"><span>SELECT</span><span>START</span></div><div class="speaker"></div><div class="rightSpeaker"></div>
   <div class="bottomControls"><span>➖</span><span>VOL</span><span>➕</span><span class="tiny"></span><span class="long">HOME</span><span>🎵</span><span>↩️</span><span class="long">🔄 🔁 🔀</span></div>
   <div class="screen"><div class="desktop"><div class="topbar"><div>NOWDO SYSTEM</div><div><span id="topDate"></span><span class="battery"></span></div></div><div class="app">
-    <nav class="tabs"><div class="tab active" data-page="choosePage" onclick="openPage('choosePage')">01 NOW</div><div class="tab" data-page="addPage" onclick="openPage('addPage')">02 ADD</div><div class="tab" data-page="poolPage" onclick="openPage('poolPage')">03 POOL</div><button class="calendarBtn" onclick="openCalendar()">📅</button></nav>
+    <nav class="tabs"><div class="tab active" data-page="choosePage" onclick="openPage('choosePage')">01 NOW</div><div class="tab" data-page="addPage" onclick="openPage('addPage')">02 ADD</div><div class="tab" data-page="poolPage" onclick="openPage('poolPage')">03 POOL</div><button class="calendarBtn" onclick="openCalendar()" aria-label="Calendar"></button></nav>
     <main id="choosePage" class="page active"><div class="stats"><span class="pill" id="workCountTop">WORK: 0</span><span class="pill" id="restCountTop">LIFE: 0</span><span class="pill" id="allCountTop">ALL: 0</span></div><div class="subtabs"><div class="subtab work active" id="chooseMainTab" onclick="setChooseTab('main')">STATUS</div><div class="subtab rest" id="chooseQuickTab" onclick="setChooseTab('quick')">QUICK</div></div>
       <section id="chooseMain" class="subpage work active"><div class="twoCols"><section class="card"><div class="bigAsk">STATUS</div><div class="sliderBox"><label>TIME: <span class="value" id="nowTimeLabel">30min</span></label><input id="nowTime" type="range" min="5" max="300" step="5" value="30" oninput="syncLabels()"><div class="ticks"><span>5m</span><span>30m</span><span>1h</span><span>2h</span><span>4h</span><span>6h</span><span>1day+</span></div></div><div class="sliderBox energy"><label>ENERGY: <span class="value" id="nowEnergyLabel">3</span> / 5</label><input id="nowEnergy" type="range" min="1" max="5" step="1" value="3" oninput="syncLabels()"><div class="energyTicks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div><button class="full" onclick="chooseTask()">NOW!</button></section><section class="card"><div class="bigAsk">RESULT</div><div class="result" id="result"><div class="empty">Press NOW.<br>It checks urgent first,<br>then important,<br>then work/study.</div></div></section></div></section>
       <section id="chooseQuick" class="subpage rest"><div class="card"><div class="bigAsk">QUICK LOG</div><div class="fishHint">These are quick 10-min logs. They do not enter the task pool.</div><div id="quickList" class="quickChips"></div></div></section>
@@ -3007,8 +3007,8 @@ body{
     /* 3–4mm on iPad 9 is roughly 14–18 CSS px.
        Use a slightly wider margin in Safari browser, smaller in installed PWA. */
     var standalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-    var sideMargin = standalone ? 20 : 24;
-    var topMargin = standalone ? 10 : 14;
+    var sideMargin = standalone ? 28 : 32;
+    var topMargin = standalone ? 14 : 18;
 
     var fitByVisibleShell = Math.min(
       (vp.w - sideMargin * 2) / VISIBLE_W,
@@ -3016,7 +3016,7 @@ body{
     );
 
     /* Avoid monster scale on desktop, but let iPad 9 become actually large. */
-    var maxScale = isIPadish ? 0.875 : 1.0;
+    var maxScale = isIPadish ? 0.855 : 1.0;
     var s = Math.min(fitByVisibleShell, maxScale);
 
     /* If the old v2.10 fitter already ran, overwrite it every time. */
@@ -3056,5 +3056,11 @@ body{
 })();
 </script>
 
+
+<style id="v2-26-tiny-shrink-and-single-calendar">
+/* v2.26: tiny shrink + single calendar icon only. No other UI changes. */
+.calendarBtn{font-size:0!important;}
+.calendarBtn::after{content:"📅"!important;font-size:18px!important;}
+</style>
 </body>
 </html>
