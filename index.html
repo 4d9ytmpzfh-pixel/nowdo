@@ -1324,5 +1324,120 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
 })();
 </script>
 
+
+<style id="v2-12-final-position-fix">
+/* =========================================================
+   v2.12 — exact requested code tweaks only
+   - slightly shrink white base plate so clear case shows again
+   - move left D-pad upward like the preview position
+   - ADD page: put URGENCY X IMPORTANCE above the NOW hint on right
+   ========================================================= */
+
+/* White metal body: smaller than v2.11, still larger than old narrow body */
+.console::before{
+  left:5.15%!important;
+  right:5.15%!important;
+  top:11.8%!important;
+  bottom:11.8%!important;
+  border-radius:62px!important;
+  background:
+    radial-gradient(ellipse at 13% 50%,rgba(255,255,255,.96) 0 15%,transparent 36%),
+    radial-gradient(ellipse at 87% 50%,rgba(255,255,255,.92) 0 15%,transparent 36%),
+    linear-gradient(90deg,#f9fbff 0%,#e9eef6 14%,#ffffff 48%,#e9eef6 86%,#f9fbff 100%)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.98),
+    inset 0 -14px 30px rgba(135,150,170,.18),
+    0 0 28px rgba(255,255,255,.30)!important;
+}
+.glassShell{opacity:.92!important;}
+
+/* Remove every possible leftover PS text circle, but keep the blank round detail */
+.psLogo{display:none!important;visibility:hidden!important;opacity:0!important;}
+.brandPlate,
+.brandPlate *{
+  font-size:0!important;
+  color:transparent!important;
+  text-indent:-9999px!important;
+  overflow:hidden!important;
+}
+.brandPlate::before,
+.brandPlate::after{content:""!important;}
+
+/* D-pad upward; keep size/detail unchanged */
+.dpad{
+  top:35.8%!important;
+  left:5.35%!important;
+  width:8.7%!important;
+  height:auto!important;
+  aspect-ratio:1!important;
+}
+.stick{bottom:30.9%!important;}
+
+/* ADD page: same layout, but title/hint live on right under priority pad */
+#addSubpage.active .card{
+  grid-template-columns:minmax(250px,.98fr) minmax(280px,1.05fr)!important;
+  grid-template-rows:auto auto auto auto 24px 20px!important;
+  column-gap:14px!important;
+  row-gap:5px!important;
+}
+#addSubpage.active .card > label:first-child{
+  grid-column:1!important;
+  grid-row:1!important;
+}
+#addSubpage.active .nameLine{
+  grid-column:1!important;
+  grid-row:2!important;
+}
+#addSubpage.active .sliderBox:nth-of-type(1){
+  grid-column:1!important;
+  grid-row:3!important;
+}
+#addSubpage.active .sliderBox:nth-of-type(2){
+  grid-column:1!important;
+  grid-row:4!important;
+}
+#addSubpage.active .priorityArea{
+  grid-column:2!important;
+  grid-row:1 / span 4!important;
+  margin:0!important;
+  align-self:start!important;
+}
+#addSubpage.active .priorityPad{
+  height:176px!important;
+  max-height:176px!important;
+}
+/* This is the real direct label for URGENCY X IMPORTANCE */
+#addSubpage.active .card > label:nth-of-type(2){
+  grid-column:2!important;
+  grid-row:5!important;
+  margin:0!important;
+  align-self:end!important;
+  font-size:15px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  color:#111827!important;
+  text-align:left!important;
+  width:auto!important;
+  position:static!important;
+}
+#addSubpage.active .priorityHint{
+  grid-column:2!important;
+  grid-row:6!important;
+  margin:0!important;
+  align-self:start!important;
+  font-size:10px!important;
+  line-height:1.1!important;
+  color:#536072!important;
+  position:static!important;
+  width:auto!important;
+}
+#addSubpage.active button.full{
+  grid-column:1!important;
+  grid-row:5 / span 2!important;
+  align-self:center!important;
+  margin:0!important;
+}
+</style>
+
 </body>
 </html>
