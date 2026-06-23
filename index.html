@@ -806,5 +806,238 @@ function bindControls(){["taskTime","nowTime","taskEnergy","nowEnergy"].forEach(
 }
 </style>
 
+
+
+<style id="v2-9-inner-compact-hotfix">
+/* v2.9 HOTFIX: keep the shell and main folder tabs; shrink only the stuff INSIDE pages. */
+.app{
+  padding:7px 8px 0!important;
+  overflow:hidden!important;
+}
+.tabs{
+  flex:0 0 auto!important;
+  margin-top:5px!important;
+}
+.tab{
+  padding:9px 16px!important;
+  font-size:14px!important;
+}
+.calendarBtn{
+  height:31px!important;
+  width:36px!important;
+}
+#choosePage.active,#addPage.active,#poolPage.active{
+  flex:1 1 auto!important;
+  height:calc(100% - 86px)!important;
+  max-height:calc(100% - 86px)!important;
+  min-height:0!important;
+  padding:8px!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+  font-size:12px!important;
+}
+/* top status chips can be smaller; main tabs stay the same */
+.stats{gap:5px!important;margin:4px 0 7px!important;flex:0 0 auto!important;}
+.pill{font-size:12px!important;padding:3px 7px!important;line-height:1.15!important;}
+.subtabs{height:31px!important;min-height:31px!important;flex:0 0 auto!important;margin:0!important;gap:3px!important;}
+.subtab{height:30px!important;padding:6px 13px!important;font-size:12px!important;line-height:1!important;}
+.subpage.active{
+  flex:1 1 auto!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  padding:7px!important;
+  overflow:hidden!important;
+}
+.card,.result{font-size:12px!important;}
+.card:before,.result:before{display:none!important;}
+.bigAsk{
+  margin:-9px -9px 8px!important;
+  padding:5px 8px!important;
+  font-size:13px!important;
+  line-height:1.05!important;
+  height:27px!important;
+}
+.bigAsk:after{font-size:12px!important;letter-spacing:2px!important;}
+label{font-size:12px!important;margin:6px 0 4px!important;line-height:1.15!important;}
+.value{min-width:42px!important;padding:1px 6px!important;font-size:12px!important;}
+.sliderBox{margin:8px 0!important;}
+input[type="range"]{height:12px!important;}
+input[type="range"]::-webkit-slider-thumb{width:18px!important;height:23px!important;}
+.sliderBox.energy input[type="range"]{height:10px!important;}
+.sliderBox.energy input[type="range"]::-webkit-slider-thumb{width:21px!important;height:21px!important;}
+.ticks,.energyTicks{font-size:10px!important;margin-top:2px!important;}
+button,.quickSmall{padding:7px 9px!important;font-size:12px!important;line-height:1.05!important;}
+.full{margin-top:7px!important;height:31px!important;}
+
+/* NOW page: two windows fit completely inside, including energy slider */
+#chooseMain.active .twoCols{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:9px!important;
+  height:100%!important;
+  min-height:0!important;
+}
+#chooseMain.active .card{
+  height:100%!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:9px!important;
+  overflow:hidden!important;
+}
+#chooseMain.active .result{
+  height:calc(100% - 24px)!important;
+  min-height:0!important;
+  padding:10px!important;
+  overflow:hidden!important;
+}
+#chooseMain.active .empty{font-size:13px!important;line-height:1.35!important;padding:8px!important;}
+#chooseMain.active .resultName{font-size:19px!important;margin:5px 0!important;}
+#chooseMain.active .reason{font-size:12px!important;line-height:1.35!important;}
+
+/* ADD page: same structure, just compact; no chopped-off priority grid */
+#addSubpage.active{padding:7px!important;}
+#addSubpage.active .card{
+  display:grid!important;
+  grid-template-columns:minmax(210px,.92fr) minmax(210px,1fr)!important;
+  grid-template-rows:auto auto auto auto auto auto!important;
+  column-gap:12px!important;
+  row-gap:5px!important;
+  height:100%!important;
+  min-height:0!important;
+  padding:11px!important;
+  margin:0!important;
+  overflow:hidden!important;
+  font-size:12px!important;
+}
+#addSubpage.active .card > label:first-child{grid-column:1!important;grid-row:1!important;margin:0 0 2px!important;}
+#addSubpage.active .nameLine{grid-column:1!important;grid-row:2!important;display:grid!important;grid-template-columns:1fr auto!important;gap:6px!important;align-items:center!important;}
+#addSubpage.active input[type="text"]{height:30px!important;padding:5px 7px!important;font-size:12px!important;}
+#addSubpage.active .quickSmall{height:30px!important;padding:5px 8px!important;font-size:11px!important;white-space:nowrap!important;}
+#addSubpage.active .sliderBox:nth-of-type(1){grid-column:1!important;grid-row:3!important;margin:5px 0!important;}
+#addSubpage.active .sliderBox:nth-of-type(2){grid-column:1!important;grid-row:4!important;margin:4px 0!important;}
+#addSubpage.active .card > label:nth-of-type(4){grid-column:2!important;grid-row:1!important;margin:0 0 2px!important;}
+#addSubpage.active .priorityArea{
+  grid-column:2!important;
+  grid-row:2 / span 4!important;
+  display:grid!important;
+  grid-template-columns:20px 1fr!important;
+  grid-template-rows:1fr 18px!important;
+  gap:4px!important;
+  min-height:0!important;
+  margin:0!important;
+  width:auto!important;
+}
+#addSubpage.active .priorityPad{
+  height:170px!important;
+  min-height:0!important;
+  max-height:170px!important;
+  aspect-ratio:auto!important;
+}
+#addSubpage.active .yAxis span{font-size:10px!important;letter-spacing:1px!important;}
+#addSubpage.active .xAxis{font-size:10px!important;}
+#addSubpage.active .dot{width:16px!important;height:16px!important;border-width:2px!important;}
+#addSubpage.active .priorityHint{
+  grid-column:2!important;
+  grid-row:6!important;
+  font-size:10px!important;
+  line-height:1.15!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+#addSubpage.active button.full{
+  grid-column:1!important;
+  grid-row:5 / span 2!important;
+  align-self:end!important;
+  height:30px!important;
+  margin:0!important;
+  width:100%!important;
+}
+
+/* POOL page: compact list area */
+#poolSubpage.active{display:flex!important;flex-direction:column!important;gap:6px!important;}
+#poolSubpage.active .card{flex:1 1 auto!important;min-height:0!important;height:auto!important;padding:8px!important;margin:0!important;overflow:auto!important;}
+#poolSubpage.active > button.full{flex:0 0 auto!important;height:30px!important;margin:0!important;}
+.task,.fishChip{padding:7px!important;margin-bottom:6px!important;font-size:12px!important;}
+.tag{font-size:10px!important;margin-top:3px!important;}
+.icon{height:22px!important;width:28px!important;font-size:10px!important;}
+.actions button{padding:5px 7px!important;font-size:11px!important;}
+
+/* calendar: compact inside screen, never shrink the whole console */
+.modal{
+  position:absolute!important;
+  inset:38px 10px 32px 10px!important;
+  padding:6px!important;
+  z-index:80!important;
+  background:rgba(28,34,45,.22)!important;
+  overflow:hidden!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.modalBox{
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  padding:8px!important;
+  overflow:hidden!important;
+  font-size:11px!important;
+}
+.modalHead h2,.modalHead h3{font-size:16px!important;margin:0!important;}
+.closeX{width:28px!important;height:28px!important;padding:0!important;}
+.calendarGrid{margin-top:5px!important;}
+.calHead{font-size:10px!important;min-height:22px!important;padding:3px!important;}
+.calDay{min-height:29px!important;padding:3px!important;}
+.calNum{font-size:11px!important;}
+.calDots{margin-top:2px!important;gap:2px!important;}
+.calDot{width:4px!important;height:4px!important;}
+.notePreview,.scheduledBadge{font-size:9px!important;padding:1px 3px!important;margin-top:1px!important;}
+.dayTimeline{display:none!important;}
+
+/* long-press task picker: appears INSIDE screen and is small enough to use */
+.desktop .popover,
+.popover{
+  position:absolute!important;
+  left:50%!important;
+  top:52%!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(300px,82%)!important;
+  max-height:72%!important;
+  padding:9px!important;
+  z-index:95!important;
+  overflow:hidden!important;
+  font-size:11px!important;
+}
+.popTitle{font-size:15px!important;margin-bottom:5px!important;}
+.popSmall{font-size:10px!important;line-height:1.25!important;margin-bottom:6px!important;}
+.existingTasks{max-height:145px!important;gap:5px!important;overflow:auto!important;}
+.pickTask{padding:7px!important;font-size:11px!important;}
+.pickTask .small{font-size:9px!important;margin-top:2px!important;}
+.popActions{margin-top:6px!important;}
+.popActions button{padding:6px 9px!important;font-size:11px!important;}
+
+@media (max-width:900px){
+  #chooseMain.active .twoCols{grid-template-columns:1fr 1fr!important;gap:6px!important;}
+  #addSubpage.active .card{grid-template-columns:1fr 1fr!important;column-gap:8px!important;padding:8px!important;}
+  #addSubpage.active .priorityPad{height:145px!important;}
+}
+</style>
+<script id="v2-9-popover-inside-screen-hotfix">
+/* keep long-press picker inside the handheld screen */
+(function(){
+  const originalOpenEventForDay = window.openEventForDay;
+  window.openEventForDay = function(e,y,m,d){
+    if(e && e.preventDefault) e.preventDefault();
+    const pop = document.getElementById('eventPopover');
+    const desktop = document.querySelector('.desktop');
+    if(pop && desktop && pop.parentElement !== desktop){ desktop.appendChild(pop); }
+    if(typeof popoverDate !== 'undefined') popoverDate = new Date(y,m,d);
+    if(typeof selectedCalendarDate !== 'undefined') selectedCalendarDate = new Date(y,m,d);
+    if(typeof renderExistingTaskPicker === 'function') renderExistingTaskPicker();
+    if(pop) pop.classList.add('active');
+  };
+})();
+</script>
+
 </body>
 </html>
