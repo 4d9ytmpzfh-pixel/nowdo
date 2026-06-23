@@ -3,18 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>NOWDO</title>
-<!-- PWA / iPad Home Screen support -->
-<meta name="theme-color" content="#171a20">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="NOWDO">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icons/icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
-
+<title>NOWDO v2.5 Reference Match</title>
 <style>
 :root{
   --ink:#151922;--muted:#5f6877;--line:#5d6675;--blue:#004bd6;--blue2:#002f91;
@@ -735,18 +724,6 @@ button.full{height:34px!important;margin:9px 0 0!important;width:100%!important;
   margin-top:30px!important;
 }
 
-</style>
-
-<style id="pwa-standalone-ipad-fix">
-/* PWA-only: keep fullscreen home-screen mode clean on iPad without changing normal web layout. */
-@supports (padding: max(0px)){
-  body{
-    padding-left: max(0px, env(safe-area-inset-left))!important;
-    padding-right: max(0px, env(safe-area-inset-right))!important;
-    padding-top: max(0px, env(safe-area-inset-top))!important;
-    padding-bottom: max(0px, env(safe-area-inset-bottom))!important;
-  }
-}
 </style>
 </head>
 <body>
@@ -2949,14 +2926,77 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
 </style>
 
 
-<script id="pwa-service-worker-register">
+
+<style id="nowdo-device-independent-stage-final">
+/* FINAL DEVICE-INDEPENDENT STAGE PATCH
+   Same 1280×960 NOWDO canvas on every device. The device only scales the canvas.
+   This does NOT change app UI, buttons, calendar, task logic, or inner layout. */
+html, body{
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+body{
+  display:grid!important;
+  place-items:center!important;
+  background:radial-gradient(ellipse at 50% 42%,#3b3f47 0%,#23272e 58%,#171a20 100%)!important;
+  -webkit-text-size-adjust:100%!important;
+  text-size-adjust:100%!important;
+  touch-action:manipulation!important;
+}
+.console{
+  width:1280px!important;
+  height:960px!important;
+  min-width:1280px!important;
+  max-width:1280px!important;
+  min-height:960px!important;
+  max-height:960px!important;
+  margin:0!important;
+  flex:0 0 auto!important;
+  transform-origin:center center!important;
+  transform:scale(var(--nowdo-stage-scale, 1))!important;
+}
+@supports (height:100dvh){
+  html, body{height:100dvh!important;}
+}
+</style>
+<script id="nowdo-device-independent-stage-final-js">
 (function(){
-  if (!('serviceWorker' in navigator)) return;
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(function(err){
-      console.warn('NOWDO service worker registration failed:', err);
-    });
-  });
+  const STAGE_W = 1280;
+  const STAGE_H = 960;
+  const SAFE_PAD = 8;
+  function viewportSize(){
+    if(window.visualViewport){
+      return { w: window.visualViewport.width, h: window.visualViewport.height };
+    }
+    return { w: window.innerWidth, h: window.innerHeight };
+  }
+  function fitNowdoStage(){
+    const c = document.querySelector('.console');
+    if(!c) return;
+    const vp = viewportSize();
+    const scale = Math.min((vp.w - SAFE_PAD * 2) / STAGE_W, (vp.h - SAFE_PAD * 2) / STAGE_H, 1);
+    const cleanScale = Math.max(0.1, scale);
+    document.documentElement.style.setProperty('--nowdo-stage-scale', cleanScale.toFixed(5));
+    document.body.style.width = vp.w + 'px';
+    document.body.style.height = vp.h + 'px';
+  }
+  window.addEventListener('resize', fitNowdoStage, {passive:true});
+  window.addEventListener('orientationchange', fitNowdoStage, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', fitNowdoStage, {passive:true});
+    window.visualViewport.addEventListener('scroll', fitNowdoStage, {passive:true});
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', fitNowdoStage);
+  }else{
+    fitNowdoStage();
+  }
+  setTimeout(fitNowdoStage, 80);
+  setTimeout(fitNowdoStage, 500);
 })();
 </script>
 
