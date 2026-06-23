@@ -1,0 +1,557 @@
+//Name:Melody 
+//Date:6/3/26
+//Purpose:gaaaaaaaaaaame
+ 
+import java.awt.*; 
+import java.awt.event.*; 
+import javax.swing.*;
+import javax.imageio.ImageIO;
+//https://stackoverflow.com/questions/1466240/how-to-set-an-image-as-a-background-for-frame-in-swing-gui-of-java
+import java.io.File;
+import java.io.IOException;
+
+public class SquareBeat extends JPanel implements ActionListener, KeyListener {
+    //keylistener : https://codingtechroom.com/question/implement-keylistener-in-jpanel-java-swing 
+    private JPanel p_card;  //to hold all of the screens
+    private JPanel card1, card2, card3;
+    private Image backgroundImage;
+    private Image backgroundImage2;
+    private Image backgroundImage3;
+    private int time = 0;
+    private int scoreNum = 0;
+    private JLabel score;
+
+    private Timer gameTimer;
+
+    CardLayout cdLayout = new CardLayout();
+    private int row = 3;
+    private int col = 3;        
+    private int leftPanel[][] = {{0, 0, 0},
+                                {0, 0, 0},
+                                {0, 0, 0},};
+    //0=background; 1=hit; 2=miss; gif=note gif;
+    private int rightPanel[][] = {{0},
+                                  {0},
+                                  {0},};   
+    
+    private JLabel pics[] = new JLabel[row * col];
+    private JLabel rightPics[] = new JLabel[3];
+
+    //the spot on the left panel
+    private int noteSpot[] = {0, 1, 2, 3, 4, 5, 6, 7, 8,
+                              3, 4, 5, 0, 1, 2, 6, 7, 8};
+                              //qweasdzxc,asdqwezxc
+    //the keys pressed to the panel array
+    private int noteKey[] = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_E,
+                             KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D,
+                             KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_C,
+                             KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D,
+                             KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_E,
+                             KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_C};
+    
+    private String picFileType = ".png";
+    
+    private int currentNote = -1;
+    //which note shows up (currently none)
+    private int nextNote = 0;//(next one)
+    private int resultSpot = -1;//the result shows up in which spot
+    private int resultEnd = 0;//clear the result
+    
+    private int noteStart[] = {4, 10, 16, 22, 28, 34, 40, 46, 52,
+                               58, 64, 70, 76, 82, 88, 94, 100, 106};    //when do gifs appear
+    private int hitStart[] =  {7, 13, 19, 25, 31, 37, 43, 49, 55,
+                               61, 67, 73, 79, 85, 91, 97, 103, 109};
+    //earlist time for clicking
+    private int hitEnd[] =    {10, 16, 22, 28, 34, 40, 46, 52, 58,
+                               64, 70, 76, 82, 88, 94, 100, 106, 112};   //latest time for clicking
+    private int level = 1;    
+    
+    //right panel
+    private int catSpot = 1;
+    //same note settings as left panel
+    private int rightNoteSpot[] = {0, 2, 0, 2, 0, 2, 0, 2, 0, 2,
+                                   0, 2, 0, 0, 2, 0, 2, 2};
+    private int rightNoteStart[] = {4, 10, 16, 22, 28, 34, 40, 46, 52, 58,
+                                64, 70, 76, 82, 88, 94, 100, 106};        
+    private int rightHitStart[] =  {7, 13, 19, 25, 31, 37, 43, 49, 55, 61,
+                                    67, 73, 79, 85, 91, 97, 103, 109};
+    private int rightHitEnd[] =    {10, 16, 22, 28, 34, 40, 46, 52, 58, 64,
+                                    70, 76, 82, 88, 94, 100, 106, 112};
+    //to separate the right panel from the left one in level2
+    private int rightCurrentNote = -1;
+    private int rightNextNote = 0;
+    private int rightResultSpot = -1;
+    private int rightResultEnd = 0;
+    
+    public SquareBeat()throws IOException {
+        //constructor with initializing code in here
+       setLayout(new BorderLayout());
+       setFocusable(true);
+        addKeyListener(this);
+
+        p_card = new JPanel();
+        p_card.setOpaque(false);
+        p_card.setLayout(cdLayout);
+        screen1();
+        screen2();
+        screen3();
+        //screen4();
+   
+        //feedBack = new JLabel("");    //feedback String for testing purposes
+        add(BorderLayout.CENTER, p_card);
+
+        
+    }
+    //start screen
+    public void screen1(){ 
+        card1 = new JPanel(){
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backgroundImage, 0, 0, this);
+            }
+        };
+        try
+        {
+            //background = new JLabel(createImageIcon("start.png")); 
+            //card1.add(background);
+            backgroundImage = ImageIO.read(new File("start.png"));
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+        card1.setLayout(null);
+        JButton enter = new JButton("ENTER"); 
+        enter.setBackground(Color.lightGray); 
+        enter.setForeground(Color.white);
+        enter.setOpaque(true); 
+        enter.addActionListener(this); 
+        enter.setActionCommand("enter");
+        enter.setBounds(750, 550, 150, 50);
+        card1.add(enter);
+        
+        p_card.add("1", card1);
+            //https://stackoverflow.com/questions/13436787/eclipse-windowbuilder-overlapping-jpanels/13437388#13437388
+    }
+    
+    //instructions
+    public void screen2(){ 
+        card2 = new JPanel(){
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backgroundImage2, 0, 0, this);
+            }
+        };
+        try
+        {
+            //background = new JLabel(createImageIcon("start.png")); 
+            //card1.add(background);
+            backgroundImage2 = ImageIO.read(new File("Rules.png"));
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+        card2.setLayout(null);
+        //bgImg = createImageIcon("Rules.png");
+        JButton next = new JButton("NEXT"); 
+        next.setBackground(Color.lightGray); 
+        next.setForeground(Color.white);
+        next.setOpaque(true); 
+        next.addActionListener(this); 
+        next.setActionCommand("next");
+        next.setBounds(750, 600, 100, 50);
+        card2.add(next);
+        
+        p_card.add("2", card2);
+            //https://stackoverflow.com/questions/13436787/eclipse-windowbuilder-overlapping-jpanels/13437388#13437388
+    }
+    
+    public void screen3(){ 
+        card3 = new JPanel(){
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backgroundImage3, 0, 0, this);
+            }
+        };
+        try
+        {
+            //background = new JLabel(createImageIcon("start.png")); 
+            //card1.add(background);
+            backgroundImage3 = ImageIO.read(new File("game.png"));
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+        card3.setLayout(null);
+        JPanel leftP = new JPanel(new GridLayout(row, col));
+        leftP.setBackground(Color.black);
+        int m = 0;
+        for (int i = 0; i < row; i++) {
+          for (int j = 0; j < col; j++) {
+    
+            pics[m] = new JLabel(createImageIcon( leftPanel[i][j] + picFileType));
+            leftP.add(pics[m]);
+            m++;
+          }
+        }
+        leftP.setBounds(235, 200, 300, 300);
+
+        card3.add(leftP);
+        
+        JPanel rightP = new JPanel(new GridLayout(3, 1));
+        rightP.setBackground(Color.black);
+        int n = 0;
+        for (int d = 0; d < rightPanel.length; d++) {
+          for (int f = 0; f < rightPanel[d].length; f++) {
+    
+            rightPics[n] = new JLabel(createImageIcon( rightPanel[d][f] + picFileType));
+            rightP.add(rightPics[n]);
+            n++;
+          }
+        }
+        rightP.setBounds(718, 200, 100, 300);
+
+        card3.add(rightP);
+        rightPics[1].setIcon(createImageIcon("carrr.png"));
+        //add the cat character
+        
+        score = new JLabel(""+scoreNum); 
+        score.setBounds(100, 400, 800, 300);
+        score.setFont(new Font("Arial", Font.BOLD, 25));
+        score.setForeground(Color.black);
+
+        card3.add(score);
+        
+        p_card.add("3", card3);
+           
+    }
+    public void startGame() {
+        level = 1;
+        scoreNum = 0;
+        score.setText("" + scoreNum);
+        startLevel1();
+    }
+    //level1
+    public void startLevel1() {
+        level = 1;
+        time = 0;
+        currentNote = -1;
+        nextNote = 0;
+        resultSpot = -1;
+        scoreNum = 0;
+        score.setText("" + scoreNum);
+        //notes and keys for level1
+        noteSpot = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8,
+                      3, 4, 5, 0, 1, 2, 6, 7, 8};
+        noteKey = new int[] {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_E,
+                     KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D,
+                     KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_C,
+                     KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D,
+                     KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_E,
+                     KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_C};
+        for (int i = 0; i < pics.length; i++) {
+            pics[i].setIcon(createImageIcon("0.png"));
+        }
+    
+        // right
+        for (int i = 0; i < rightPics.length; i++) {
+            rightPics[i].setIcon(createImageIcon("0.png"));
+        }
+        catSpot = 1;
+        rightPics[catSpot].setIcon(createImageIcon("carrr.png"));
+    
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+    
+        gameTimer = new Timer(250, this);
+        gameTimer.start();
+    }
+    //level2
+    public void startLevel2() {
+        level = 2;
+        time = 0;
+        currentNote = -1;
+        nextNote = 0;
+        resultSpot = -1;
+        scoreNum = 0;
+        score.setText("" + scoreNum);
+        //notes and keys for level2 (left)
+        noteSpot = new int[] {0, 5, 4, 2, 1, 7, 3, 8, 6, 1, 2, 3, 8, 1, 5, 4, 6, 7};
+        noteKey = new int[] {KeyEvent.VK_Q, KeyEvent.VK_D, KeyEvent.VK_S,
+                     KeyEvent.VK_E, KeyEvent.VK_W, KeyEvent.VK_X,
+                     KeyEvent.VK_A, KeyEvent.VK_C, KeyEvent.VK_Z,
+                     KeyEvent.VK_W, KeyEvent.VK_E, KeyEvent.VK_A,
+                     KeyEvent.VK_C, KeyEvent.VK_W, KeyEvent.VK_D,
+                     KeyEvent.VK_S, KeyEvent.VK_Z, KeyEvent.VK_X};
+        
+        //separate right panel
+        rightCurrentNote = -1;
+        rightNextNote = 0;
+        rightResultSpot = -1;
+        rightResultEnd = 0;
+        for (int i = 0; i < pics.length; i++) {
+            pics[i].setIcon(createImageIcon("0.png"));
+        }
+        
+        //right panel
+        for (int i = 0; i < rightPics.length; i++) {
+            rightPics[i].setIcon(createImageIcon("0.png"));
+        }
+        catSpot = 1;
+        rightPics[catSpot].setIcon(createImageIcon("carrr.png"));
+    }
+    public void updateGame() {
+        time++;
+        if (level == 1) {
+            updateLevel1();
+        } else if (level == 2) {
+            updateLevel2();
+        }
+    }
+    public void updateLevel1() {
+        if (resultSpot != -1 && time >= resultEnd) {
+            pics[resultSpot].setIcon(createImageIcon("0.png"));
+            resultSpot = -1;
+        }
+    
+        if (currentNote == -1 && resultSpot == -1 && nextNote < noteSpot.length && time >= noteStart[nextNote]) {
+            currentNote = nextNote;
+            pics[noteSpot[currentNote]].setIcon(createGifIcon("gif.gif"));
+            nextNote++;
+        }
+    
+        if (currentNote != -1 && time > hitEnd[currentNote]) {
+            pics[noteSpot[currentNote]].setIcon(createImageIcon("2.png"));
+            resultSpot = noteSpot[currentNote];
+            resultEnd = time + 2;
+            currentNote = -1;
+        }
+    
+        if (currentNote == -1 && resultSpot == -1 && nextNote >= noteSpot.length) {
+            if (scoreNum >= 120) {
+                JOptionPane.showMessageDialog(null, "You win, Level 2 begins!");
+                startLevel2();
+            } else {
+                JOptionPane.showMessageDialog(null, "You lose... Let's restart the game.");
+                startLevel1();
+            }
+        }
+    }
+    public void updateLevel2() {
+        updateLevel2Left();
+        updateLevel2Right();
+    
+        if (currentNote == -1 && resultSpot == -1 && nextNote >= noteSpot.length
+            && rightCurrentNote == -1 && rightResultSpot == -1 && rightNextNote >= rightNoteSpot.length) {
+            if (scoreNum >= 290) {
+                gameTimer.stop();
+                JOptionPane.showMessageDialog(null, "You finished level 2!");
+            } else {
+                JOptionPane.showMessageDialog(null, "You lose... Let's restart level 2.");
+                startLevel2();
+            }
+        }
+    }
+    //L2 left update
+    public void updateLevel2Left() {
+        //icon setting
+        if (resultSpot != -1 && time >= resultEnd) {
+            pics[resultSpot].setIcon(createImageIcon("0.png"));
+            resultSpot = -1;
+        }
+        //notes appear
+        if (currentNote == -1 && resultSpot == -1 && nextNote < noteSpot.length && time >= noteStart[nextNote]) {
+            currentNote = nextNote;
+            pics[noteSpot[currentNote]].setIcon(createGifIcon("gif.gif"));
+            nextNote++;
+        }
+        //time adjust
+        if (currentNote != -1 && time > hitEnd[currentNote]) {
+            pics[noteSpot[currentNote]].setIcon(createImageIcon("2.png"));
+            resultSpot = noteSpot[currentNote];
+            resultEnd = time + 2;
+            currentNote = -1;
+        }
+    }
+    //L2 right update
+    public void updateLevel2Right() {
+        //all ifs r the same w the ones in the left update, but using separated variables
+        if (rightResultSpot != -1 && time >= rightResultEnd) {
+            rightPics[rightResultSpot].setIcon(createImageIcon("0.png"));
+            rightPics[catSpot].setIcon(createImageIcon("carrr.png"));
+            rightResultSpot = -1;
+        }
+    
+        if (rightCurrentNote == -1 && rightResultSpot == -1 && rightNextNote < rightNoteSpot.length && time >= rightNoteStart[rightNextNote]) {
+            rightCurrentNote = rightNextNote;
+            rightPics[rightNoteSpot[rightCurrentNote]].setIcon(createGifIcon("gif.gif"));
+            rightNextNote++;
+            //cat will get points if it is already at the grid before the gif appears
+            checkRightKeys();
+        }
+    
+        if (rightCurrentNote != -1 && time > rightHitEnd[rightCurrentNote]) {
+            rightPics[rightNoteSpot[rightCurrentNote]].setIcon(createImageIcon("2.png"));
+            rightResultSpot = rightNoteSpot[rightCurrentNote];
+            rightResultEnd = time + 2;
+            rightCurrentNote = -1;
+        }
+    }
+
+    @Override //overriding the library method with our own
+    public void actionPerformed(ActionEvent e) {
+         if (e.getSource() == gameTimer) {
+            updateGame();
+        }        
+        else if(e.getActionCommand().equals("enter"))
+            cdLayout.show(p_card, "2");
+        else if(e.getActionCommand().equals("next")){
+            cdLayout.show(p_card, "3");
+            startGame();
+            requestFocusInWindow();
+        }
+    }
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (level == 1) {
+            checkLevel1Keys(e);
+        } else if (level == 2) {
+            checkLevel2Keys(e);
+        }
+    }
+    //checking notes for level1
+    public void checkLevel1Keys(KeyEvent e) {
+        //to divide the right panel
+        if (level == 2 && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)) {
+            return;
+        }
+        if (currentNote != -1) {
+            if (e.getKeyCode() == noteKey[currentNote]) {
+                if (time >= hitStart[currentNote] && time <= hitEnd[currentNote]) {
+                    scoreNum += 10;
+                    score.setText("" + scoreNum);
+    
+                    pics[noteSpot[currentNote]].setIcon(createImageIcon("1.png"));
+                    resultSpot = noteSpot[currentNote];
+                    resultEnd = time + 2;
+                    currentNote = -1;
+    
+                } else{
+                    pics[noteSpot[currentNote]].setIcon(createImageIcon("2.png"));
+                    resultSpot = noteSpot[currentNote];
+                    resultEnd = time + 2;
+                    currentNote = -1;
+                }
+            } else {
+                pics[noteSpot[currentNote]].setIcon(createImageIcon("2.png"));
+                resultSpot = noteSpot[currentNote];
+                resultEnd = time + 2;
+                currentNote = -1;
+            }
+        }
+    }
+    //checking for L2
+    public void checkLevel2Keys(KeyEvent e) {
+        //to get the pressed key (e)
+        checkLevel1Keys(e);
+        //use arrows to move the cat
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            moveCat(catSpot - 1);
+            checkRightKeys();
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            moveCat(catSpot + 1);
+            checkRightKeys();
+        }
+    
+    }
+    //separate the checking part for the right panel
+    public void checkRightKeys() {
+        //same thing w the left one but separated
+        if (rightCurrentNote != -1) {
+            if (catSpot == rightNoteSpot[rightCurrentNote]) {
+                if (time >= rightHitStart[rightCurrentNote] && time <= rightHitEnd[rightCurrentNote]) {
+                    //on time
+                    scoreNum += 10;
+                    score.setText("" + scoreNum);
+                    rightPics[rightNoteSpot[rightCurrentNote]].setIcon(createImageIcon("1.png"));
+                    rightResultSpot = rightNoteSpot[rightCurrentNote];
+                    rightResultEnd = time + 2;
+                    rightCurrentNote = -1;
+                } else {
+                    rightPics[rightNoteSpot[rightCurrentNote]].setIcon(createImageIcon("2.png"));
+                    rightResultSpot = rightNoteSpot[rightCurrentNote];
+                    rightResultEnd = time + 2;
+                    rightCurrentNote = -1;
+                }
+            }
+        }
+    }
+    //move the cat
+    public void moveCat(int newSpot) {
+        if (newSpot >= 0 && newSpot < rightPics.length) {
+            if (rightCurrentNote != -1 && catSpot == rightNoteSpot[rightCurrentNote]) {
+                rightPics[catSpot].setIcon(createGifIcon("gif.gif"));
+            } else if (rightResultSpot != catSpot) {
+                rightPics[catSpot].setIcon(createImageIcon("0.png"));
+            }
+    
+            catSpot = newSpot;
+            //newSpot is where cat is moving to, if newSpot is not in array, cat will not move
+            if (rightResultSpot != catSpot) {
+                rightPics[catSpot].setIcon(createImageIcon("carrr.png"));
+            }
+        }
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+    
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    protected static ImageIcon createImageIcon(String path) { 
+    
+        java.net.URL imgURL = SquareBeat.class.getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            System.err.println("Couldn't find file: " + path); 
+            return null;
+        }
+    }
+    //the same method but changing image into gif
+    protected static ImageIcon createGifIcon(String path) {
+        java.net.URL imgURL = SquareBeat.class.getResource(path);
+        if (imgURL != null) {
+            ImageIcon icon = new ImageIcon(imgURL);
+            icon.getImage().flush();
+            //https://www.reddit.com/r/javahelp/comments/8xearx/imageicon_getimageflush_doesnt_work/
+            return icon;
+        } else {
+            System.err.println("Couldn't find file: " + path); 
+            return null;
+        }
+    }
+    public static void main(String[] args) {
+        SquareBeat panel = null;
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        JFrame frame = new JFrame("SquareBeat"); 
+    
+        frame.setSize(980, 700);         //resizes JFrame pane size
+        frame.setBackground(Color.WHITE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        try {
+            panel = new SquareBeat();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        frame.setLocationByPlatform(true);
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+}
