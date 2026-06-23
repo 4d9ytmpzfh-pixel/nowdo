@@ -750,9 +750,9 @@ let tasks=JSON.parse(localStorage.getItem("nowDoTasksV16")||"[]");let quicks=JSO
 function $(id){return document.getElementById(id)}function save(){localStorage.setItem("nowDoTasksV16",JSON.stringify(tasks));localStorage.setItem("nowDoQuicksV16",JSON.stringify(quicks));localStorage.setItem("nowDoLogsV16",JSON.stringify(logs));localStorage.setItem("nowDoPlansV16",JSON.stringify(plans))}function updateTopDate(){const d=new Date();$("topDate").textContent=d.toLocaleDateString("en-CA",{month:"2-digit",day:"2-digit"})+" "+d.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})}function showToast(text){let t=$("toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t)}t.textContent=text;t.classList.add("active");setTimeout(()=>t.classList.remove("active"),2200)}
 function openPage(pageId){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));$(pageId).classList.add("active");document.querySelector(`.tab[data-page="${pageId}"]`).classList.add("active")}function setChooseTab(tab){chooseTab=tab;$("chooseMainTab").classList.toggle("active",tab==="main");$("chooseQuickTab").classList.toggle("active",tab==="quick");$("chooseMain").classList.toggle("active",tab==="main");$("chooseQuick").classList.toggle("active",tab==="quick")}function setTaskType(type){currentTaskType=type;["work","rest"].forEach(t=>$("add"+cap(t)+"Tab").classList.toggle("active",type===t));$("addSubpage").className="subpage active "+type}function setPoolTab(type){poolTab=type;["work","rest"].forEach(t=>$("pool"+cap(t)+"Tab").classList.toggle("active",type===t));$("poolSubpage").className="subpage active "+type;renderTasks()}function cap(t){return t.charAt(0).toUpperCase()+t.slice(1)}function formatTime(v){let n=Number(v);if(n>=300)return"1day+";if(n>=240)return"4h+";if(n>=180)return"3h";if(n>=120)return"2h";if(n>=60)return Math.round(n/60)+"h";return n+"min"}function syncLabels(){["taskTime","nowTime","taskEnergy","nowEnergy"].forEach(id=>{if(!$(id))return});$("taskTimeLabel").textContent=formatTime($("taskTime").value);$("nowTimeLabel").textContent=formatTime($("nowTime").value);$("taskEnergyLabel").textContent=$("taskEnergy").value;$("nowEnergyLabel").textContent=$("nowEnergy").value}
 function setPriorityFromEvent(e){e.preventDefault();const pad=$("priorityPad"),rect=pad.getBoundingClientRect();const p=e.touches?e.touches[0]:e;let x=Math.max(0,Math.min(1,(p.clientX-rect.left)/rect.width));let y=Math.max(0,Math.min(1,(p.clientY-rect.top)/rect.height));urgency=x;importance=1-y;updateDot()}function updateDot(){$("priorityDot").style.left=urgency*100+"%";$("priorityDot").style.top=(1-importance)*100+"%";$("urgencyLabel").textContent=Math.round(urgency*100);$("importanceLabel").textContent=Math.round(importance*100)}
-function addTask(){const name=$("taskName").value.trim();if(!name){alert("先写一个 TASK NAME!");return}tasks.push({id:Date.now(),name,type:currentTaskType,urgency,importance,time:Number($("taskTime").value),energy:Number($("taskEnergy").value)});$("taskName").value="";save();poolTab=currentTaskType;setPoolTab(poolTab);openPage("poolPage")}function addFishQuick(nameArg){const name=(nameArg||$("taskName").value).trim();if(!name){alert("先写一个 QUICK 名字!");return}if(!quicks.some(q=>q.name===name&&q.type==="fish"))quicks.push({id:Date.now(),name,type:"fish",time:10});save();renderQuicks()}function addQuickFromName(){const name=$("taskName").value.trim();if(!name){alert("先写一个 QUICK 名字!");return}addFishQuick(name);$("taskName").value="";openPage("choosePage");setChooseTab("quick");showToast("已加入 QUICK: "+name+"。点它才会记录到 TIMELINE。")}function addLog(name,type,minutes=10){const start=new Date(),end=new Date(start.getTime()+minutes*60000);logs.push({id:Date.now(),name,type,start:start.toISOString(),end:end.toISOString(),minutes});save();renderCalendar()}function useQuick(id){const q=quicks.find(x=>x.id===id);if(!q)return;addLog(q.name,q.type,q.time||10);selectedCalendarDate=new Date();openCalendar();showToast("LOGS: "+q.name+" (10 min)")}function deleteQuick(id){quicks=quicks.filter(q=>q.id!==id);save();renderQuicks()}function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);save();renderTasks()}function startTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;addLog(item.name,item.type,Math.min(item.time,Number($("nowTime").value)||item.time));tasks=tasks.filter(t=>t.id!==id);save();renderTasks();$("result").innerHTML=`<div class="resultName">STARTED</div><div class="reason">已从现在 START 记录到 TIMELINE，并从任务池移除。</div>`}function clearTasks(){if(confirm("真的要 CLEAR 所有任务吗？")){tasks=[];save();renderTasks()}}
-function comparePriority(a,b){return(b.urgency-a.urgency)||(b.importance-a.importance)||((a.type==="work"?-1:0)-(b.type==="work"?-1:0))||(a.time-b.time)||(a.energy-b.energy)}function chooseTask(){const nowTime=Number($("nowTime").value),nowEnergy=Number($("nowEnergy").value);if(!tasks.length){$("result").innerHTML=`<div class="empty">Task pool is empty. Add something first.</div>`;return}let possible=tasks.filter(t=>t.time<=nowTime&&t.energy<=nowEnergy);if(!possible.length){const target=[...tasks].sort((a,b)=>(b.urgency-a.urgency)||(b.importance-a.importance)||(Math.abs(a.time-nowTime)-Math.abs(b.time-nowTime))||(a.energy-b.energy))[0];$("result").innerHTML=`<div class="resultName">MINI VERSION</div><div class="reason">Try a 5-min version of [${escapeHtml(target.name)}].<br>Open the file / take out the thing / write one line.<br><br><span class="tag">Original: ${typeName(target.type)} · ${formatTime(target.time)} · energy${target.energy}/5 · urg${Math.round(target.urgency*100)}% · imp${Math.round(target.importance*100)}%</span></div>`;return}possible.sort(comparePriority);const c=possible[0];$("result").innerHTML=`<div>DO NOW:</div><div class="resultName">${escapeHtml(c.name)}</div><div class="reason">Do ${formatTime(Math.min(c.time,nowTime))}.<br>推荐逻辑：先 urg，再 imp，再优先 WORK。<br>Type: ${typeName(c.type)}，urg ${Math.round(c.urgency*100)}%，imp ${Math.round(c.importance*100)}%。</div><button class="full" onclick="startTask(${c.id})">START 做，并加到 TIMELINE</button>`}
-function renderTasks(){const work=tasks.filter(t=>t.type==="work").length,rest=tasks.filter(t=>t.type==="rest").length;["workCount","workCountTop"].forEach(id=>$(id)&&($(id).textContent=`WORK: ${work}`));["restCount","restCountTop"].forEach(id=>$(id)&&($(id).textContent=`LIFE: ${rest}`));["allCount","allCountTop"].forEach(id=>$(id)&&($(id).textContent=`ALL: ${work+rest}`));const list=$("taskList");if(!list)return;const shown=tasks.filter(t=>t.type===poolTab).sort(comparePriority);if(!shown.length){list.innerHTML=`<div class="empty">This folder is empty.</div>`;return}list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} · ${formatTime(t.time)} · energy${t.energy}/5 · 急${Math.round(t.urgency*100)}% / 重${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join("")}function renderQuicks(){const list=$("quickList"),shown=quicks.filter(q=>q.type==="fish");if(!shown.length){list.innerHTML=`<div class="empty">还没有 QUICK 快捷项。去 ADD 输入，比如“刷手机”，点“ADD QUICK”。</div>`;return}list.innerHTML=shown.map(q=>`<div class="fishChip"><span>${escapeHtml(q.name)}</span><button onclick="useQuick(${q.id})">+10m</button><button class="danger" onclick="deleteQuick(${q.id})">×</button></div>`).join("")}function typeIcon(t){return t==="work"?"[W]":t==="rest"?"[L]":"[Q]"}function typeName(t){return t==="work"?"WORK":t==="rest"?"LIFE":"QUICK"}
+function addTask(){const name=$("taskName").value.trim();if(!name){alert("Write a task name first.");return}tasks.push({id:Date.now(),name,type:currentTaskType,urgency,importance,time:Number($("taskTime").value),energy:Number($("taskEnergy").value)});$("taskName").value="";save();poolTab=currentTaskType;setPoolTab(poolTab);openPage("poolPage")}function addFishQuick(nameArg){const name=(nameArg||$("taskName").value).trim();if(!name){alert("Write a quick name first.");return}if(!quicks.some(q=>q.name===name&&q.type==="fish"))quicks.push({id:Date.now(),name,type:"fish",time:10});save();renderQuicks()}function addQuickFromName(){const name=$("taskName").value.trim();if(!name){alert("Write a quick name first.");return}addFishQuick(name);$("taskName").value="";openPage("choosePage");setChooseTab("quick");showToast("Added QUICK: "+name+". Tap it to log to TIMELINE.")}function addLog(name,type,minutes=10){const start=new Date(),end=new Date(start.getTime()+minutes*60000);logs.push({id:Date.now(),name,type,start:start.toISOString(),end:end.toISOString(),minutes});save();renderCalendar()}function useQuick(id){const q=quicks.find(x=>x.id===id);if(!q)return;addLog(q.name,q.type,q.time||10);selectedCalendarDate=new Date();openCalendar();showToast("LOGS: "+q.name+" (10 min)")}function deleteQuick(id){quicks=quicks.filter(q=>q.id!==id);save();renderQuicks()}function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);save();renderTasks()}function startTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;addLog(item.name,item.type,Math.min(item.time,Number($("nowTime").value)||item.time));tasks=tasks.filter(t=>t.id!==id);save();renderTasks();$("result").innerHTML=`<div class="resultName">STARTED</div><div class="reason">Started. Added to timeline and removed from task pool.</div>`}function clearTasks(){if(confirm("Clear tasks in the current folder?")){tasks=[];save();renderTasks()}}
+function comparePriority(a,b){return(b.urgency-a.urgency)||(b.importance-a.importance)||((a.type==="work"?-1:0)-(b.type==="work"?-1:0))||(a.time-b.time)||(a.energy-b.energy)}function chooseTask(){const nowTime=Number($("nowTime").value),nowEnergy=Number($("nowEnergy").value);if(!tasks.length){$("result").innerHTML=`<div class="empty">Task pool is empty. Add something first.</div>`;return}let possible=tasks.filter(t=>t.time<=nowTime&&t.energy<=nowEnergy);if(!possible.length){const target=[...tasks].sort((a,b)=>(b.urgency-a.urgency)||(b.importance-a.importance)||(Math.abs(a.time-nowTime)-Math.abs(b.time-nowTime))||(a.energy-b.energy))[0];$("result").innerHTML=`<div class="resultName">MINI VERSION</div><div class="reason">Try a 5-min version of [${escapeHtml(target.name)}].<br>Open the file / take out the thing / write one line.<br><br><span class="tag">Original: ${typeName(target.type)} · ${formatTime(target.time)} · energy${target.energy}/5 · urg${Math.round(target.urgency*100)}% · imp${Math.round(target.importance*100)}%</span></div>`;return}possible.sort(comparePriority);const c=possible[0];$("result").innerHTML=`<div>DO NOW:</div><div class="resultName">${escapeHtml(c.name)}</div><div class="reason">Do ${formatTime(Math.min(c.time,nowTime))}.<br>Priority: urgent, then important, then work/life.<br>Type: ${typeName(c.type)}，urg ${Math.round(c.urgency*100)}%，imp ${Math.round(c.importance*100)}%。</div><button class="full" onclick="startTask(${c.id})">START TIMELINE</button>`}
+function renderTasks(){const work=tasks.filter(t=>t.type==="work").length,rest=tasks.filter(t=>t.type==="rest").length;["workCount","workCountTop"].forEach(id=>$(id)&&($(id).textContent=`WORK: ${work}`));["restCount","restCountTop"].forEach(id=>$(id)&&($(id).textContent=`LIFE: ${rest}`));["allCount","allCountTop"].forEach(id=>$(id)&&($(id).textContent=`ALL: ${work+rest}`));const list=$("taskList");if(!list)return;const shown=tasks.filter(t=>t.type===poolTab).sort(comparePriority);if(!shown.length){list.innerHTML=`<div class="empty">This folder is empty.</div>`;return}list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} · ${formatTime(t.time)} · energy${t.energy}/5 · urg${Math.round(t.urgency*100)}% / imp${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join("")}function renderQuicks(){const list=$("quickList"),shown=quicks.filter(q=>q.type==="fish");if(!shown.length){list.innerHTML=`<div class="empty">No QUICK shortcuts yet. Add one from ADD.</div>`;return}list.innerHTML=shown.map(q=>`<div class="fishChip"><span>${escapeHtml(q.name)}</span><button onclick="useQuick(${q.id})">+10m</button><button class="danger" onclick="deleteQuick(${q.id})">×</button></div>`).join("")}function typeIcon(t){return t==="work"?"[W]":t==="rest"?"[L]":"[Q]"}function typeName(t){return t==="work"?"WORK":t==="rest"?"LIFE":"QUICK"}
 function openCalendar(){renderCalendar();$("calendarModal").classList.add("active")}function closeCalendar(){$("calendarModal").classList.remove("active")}function closeCalendarBg(e){if(e.target.id==="calendarModal")closeCalendar()}function clearLogs(){if(confirm("CLEAR TIMELINE 记录吗？")){logs=[];save();renderCalendar()}}function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}function renderCalendar(){if(!$("calendarMonth"))return;$("logCount").textContent=`LOGS: ${logs.length}`;const monthBox=$("calendarMonth"),year=selectedCalendarDate.getFullYear(),month=selectedCalendarDate.getMonth();$("viewToggle").textContent=calendarView==="month"?"WEEK":"MONTH";const heads=["S","M","T","W","T","F","S"].map(x=>`<div class="calHead">${x}</div>`).join("");const todayKey=dateKey(new Date()),selectedKey=dateKey(selectedCalendarDate);let cells="";if(calendarView==="month"){const first=new Date(year,month,1),last=new Date(year,month+1,0);for(let i=0;i<first.getDay();i++)cells+=`<div class="calDay emptyDay"></div>`;for(let d=1;d<=last.getDate();d++){const cur=new Date(year,month,d),key=dateKey(cur);const dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key),dayPlans=plans.filter(p=>p.date===key);const dots=[...dayLogs.map(l=>l.type),...dayPlans.map(p=>p.kind==="plan"?"plan":"note")].slice(0,4).map(t=>`<span class="calDot ${t}"></span>`).join("");cells+=`<div class="calDay ${key===selectedKey?"active":""} ${key===todayKey?"today":""}" onclick="handleCalendarClick(event,${year},${month},${d})" ondblclick="startInlineNote(event,${year},${month},${d})" onpointerdown="startLongPress(event,${year},${month},${d})" onpointerup="cancelLongPress()" onpointerleave="cancelLongPress()"><div class="calNum">${d}</div><div class="calDots">${dots}</div>${renderNotePreviews(key)}</div>`}}else{const base=new Date(selectedCalendarDate),sunday=new Date(base);sunday.setDate(base.getDate()-base.getDay());for(let i=0;i<7;i++){const cur=new Date(sunday);cur.setDate(sunday.getDate()+i);const key=dateKey(cur),dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key),dayPlans=plans.filter(p=>p.date===key);const dots=[...dayLogs.map(l=>l.type),...dayPlans.map(p=>p.kind==="plan"?"plan":"note")].slice(0,6).map(t=>`<span class="calDot ${t}"></span>`).join("");cells+=`<div class="calDay ${key===selectedKey?"active":""} ${key===todayKey?"today":""}" onclick="handleCalendarClick(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" ondblclick="startInlineNote(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" onpointerdown="startLongPress(event,${cur.getFullYear()},${cur.getMonth()},${cur.getDate()})" onpointerup="cancelLongPress()" onpointerleave="cancelLongPress()" style="min-height:72px"><div class="calNum">${cur.getDate()}</div><div class="calDots">${dots}</div>${renderNotePreviews(key)}</div>`}}monthBox.innerHTML=`<div class="modalHead"><button class="secondary" onclick="changeMonth(-1)">‹</button><h3>${year}/${month+1}</h3><button class="secondary" onclick="changeMonth(1)">›</button></div><div class="calendarGrid">${heads}${cells}</div>`;renderWeekPlanner();renderDayTimeline()}function renderWeekPlanner(){const box=$("weekPlanner");box.innerHTML=calendarView!=="week"?"":`<div style="display:flex;color:var(--muted);font-size:12px;padding:4px 2px 0">Double-tap: note / Long-press: schedule</div>`}function toggleCalendarView(){calendarView=calendarView==="month"?"week":"month";renderCalendar()}function handleCalendarClick(e,y,m,d){if(longPressFired){longPressFired=false;return}const key=dateKey(new Date(y,m,d)),now=Date.now();if(lastTapKey===key&&now-lastTapTime<360){startInlineNote(e,y,m,d);lastTapTime=0;lastTapKey="";return}lastTapKey=key;lastTapTime=now;selectCalendarDay(y,m,d)}function selectCalendarDay(y,m,d){selectedCalendarDate=new Date(y,m,d);renderCalendar()}function startLongPress(e,y,m,d){longPressFired=false;cancelLongPress();pressTimer=setTimeout(()=>{longPressFired=true;openEventForDay(e,y,m,d)},520)}function cancelLongPress(){if(pressTimer){clearTimeout(pressTimer);pressTimer=null}}function startInlineNote(e,y,m,d){e.preventDefault();e.stopPropagation();cancelLongPress();const cell=e.currentTarget,key=dateKey(new Date(y,m,d));if(cell.querySelector(".inlineNote"))return;const input=document.createElement("textarea");input.className="inlineNote";input.rows=2;input.placeholder="note...";input.addEventListener("click",ev=>ev.stopPropagation());input.addEventListener("pointerdown",ev=>ev.stopPropagation());input.addEventListener("keydown",ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();saveInlineNote(input,key)}if(ev.key==="Escape")renderCalendar()});input.addEventListener("blur",()=>{const text=input.value.trim();if(text)saveInlineNote(input,key);else renderCalendar()});cell.appendChild(input);setTimeout(()=>input.focus(),60)}function saveInlineNote(input,key){const text=input.value.trim();if(!text){renderCalendar();return}plans.push({id:Date.now(),date:key,text,kind:"note"});save();renderCalendar();showToast("Note added: "+text)}function renderNotePreviews(key){const ns=plans.filter(p=>p.date===key&&(p.kind||"note")==="note").slice(0,1),ps=plans.filter(p=>p.date===key&&p.kind==="plan").slice(0,2);return ns.map(n=>`<div class="notePreview">NOTE ${escapeHtml(n.text)}</div>`).join("")+ps.map(p=>`<div class="scheduledBadge">OK ${escapeHtml(p.text)}</div>`).join("")}function openEventForDay(e,y,m,d){e.preventDefault();popoverDate=new Date(y,m,d);selectedCalendarDate=new Date(y,m,d);renderExistingTaskPicker();$("eventPopover").classList.add("active")}function renderExistingTaskPicker(){const box=$("existingTaskList");if(!tasks.length){box.innerHTML=`<div class="empty">Task pool is empty. Add tasks first.</div>`;return}const sorted=[...tasks].sort(comparePriority);box.innerHTML=sorted.map(t=>`<button class="pickTask ${t.type}" onclick="scheduleExistingTask(${t.id})">${typeIcon(t.type)} ${escapeHtml(t.name)}<span class="small">${typeName(t.type)} · ${formatTime(t.time)} · energy${t.energy}/5</span></button>`).join("")}function scheduleExistingTask(id){const t=tasks.find(x=>x.id===id);if(!t)return;plans.push({id:Date.now(),date:dateKey(popoverDate),text:t.name,kind:"plan",taskId:t.id,type:t.type,time:t.time,energy:t.energy});save();closePopovers();renderCalendar();showToast("Pinned: "+t.name)}function closePopovers(){$("eventPopover").classList.remove("active")}function changeMonth(delta){if(calendarView==="week")selectedCalendarDate.setDate(selectedCalendarDate.getDate()+delta*7);else selectedCalendarDate=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth()+delta,1);renderCalendar()}function renderDayTimeline(){const box=$("dayTimeline"),key=dateKey(selectedCalendarDate);const dayLogs=logs.filter(l=>dateKey(new Date(l.start))===key).sort((a,b)=>new Date(a.start)-new Date(b.start));const dayPlans=plans.filter(p=>p.date===key);const title=selectedCalendarDate.toLocaleDateString("en-CA",{month:"short",day:"numeric",weekday:"short"});let rows="";for(let h=0;h<=23;h++){const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h),major=h%3===0;rows+=`<div class="hourRow ${major?"major":""}"><div class="hourLabel">${String(h).padStart(2,"0")}:00</div><div class="hourSlot">`;rows+=hourLogs.map(l=>{const s=new Date(l.start),e=new Date(l.end);return`<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${s.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})} - ${e.toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})} · ${l.minutes}min</div></div>`}).join("");if(h===0)rows+=dayPlans.map(p=>p.kind==="plan"?`<div class="eventBlock plan"><strong>OK ${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||"work")} · ${formatTime(p.time||30)}</div></div>`:`<div class="eventBlock note"><strong>NOTE ${escapeHtml(p.text)}</strong><div class="tag">Note</div></div>`).join("");rows+=`</div></div>`}box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`}function escapeHtml(text){return String(text).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function bindControls(){["taskTime","nowTime","taskEnergy","nowEnergy"].forEach(id=>{const el=$(id);if(el){el.addEventListener("input",syncLabels);el.addEventListener("change",syncLabels);el.addEventListener("touchmove",syncLabels,{passive:true});el.addEventListener("pointermove",syncLabels)}});document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>openPage(tab.dataset.page)))}bindControls();syncLabels();updateDot();renderTasks();renderQuicks();updateTopDate();setInterval(updateTopDate,30000);
 
@@ -2397,7 +2397,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
         <div class="now-result-name">${escapeHtml(c.name)}</div>
         <div class="now-result-reason">${mini?'Try a 5-min version. Open it / prepare it / do one tiny step.':'Do '+formatTime(Math.min(c.time,nowTime))+'. Priority: urgent, then important, then work/life.'}<br>Type: ${typeName(c.type)}, urg ${Math.round(c.urgency*100)}%, imp ${Math.round(c.importance*100)}%.</div>
       </div>
-      <button class="full" onclick="startTask(${c.id})">START 做，<br>并加到 TIMELINE</button>
+      <button class="full" onclick="startTask(${c.id})">START<br>TIMELINE</button>
     </div>`;
   };
   window.startTask = function(id){
@@ -2407,7 +2407,7 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
     tasks=(tasks||[]).filter(t=>t.id!==id);
     save(); renderTasks();
     const box=document.getElementById('result');
-    if(box) box.innerHTML='<div class="empty">STARTED. 已记录到 TIMELINE，并从任务池移除。</div>';
+    if(box) box.innerHTML='<div class="empty">STARTED. Added to timeline and removed from task pool.</div>';
   };
 
   // note: one note per day, editable; delete by leaving it empty
@@ -2464,6 +2464,349 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
   };
   scrubTesting();
   try{renderTasks();renderQuicks();}catch(e){}
+})();
+</script>
+
+
+<style id="v2-19-real-bugfix-css">
+/* v2.19: actual bug fixes requested */
+.popover{z-index:99999!important; position:fixed!important;}
+#eventPopover.active{display:block!important;}
+.energyDenom{display:inline-block!important; font-size:inherit!important; font-weight:900!important; line-height:1!important; vertical-align:baseline!important; color:#07192d!important;}
+.sliderBox.energy label{display:flex!important; align-items:center!important; gap:6px!important; flex-wrap:nowrap!important;}
+.sliderBox.energy label .value{font-size:inherit!important; line-height:1!important;}
+.now-result-clean{display:grid!important; grid-template-columns:1fr auto!important; gap:14px!important; align-items:center!important; width:100%!important; height:100%!important; padding:8px 10px!important;}
+.now-result-clean .full{position:static!important; width:150px!important; min-height:54px!important; margin:0!important; font-size:14px!important; line-height:1.05!important; white-space:normal!important;}
+.now-result-copy{text-align:left!important; min-width:0!important;}
+.now-result-kicker{font-weight:900!important; font-size:12px!important; margin-bottom:5px!important;}
+.now-result-name{font-weight:900!important; font-size:22px!important; margin:4px 0!important; word-break:break-word!important;}
+.now-result-reason{font-size:12px!important; line-height:1.35!important; color:#40506b!important;}
+#result .empty{font-size:14px!important; line-height:1.45!important; text-align:center!important;}
+</style>
+
+<script id="v2-19-real-bugfixes">
+(function(){
+  const VERSION='NOWDO_v2_19_real_bugfix';
+  const KEYS=['nowDoTasksV16','nowDoQuicksV16','nowDoLogsV16','nowDoPlansV16'];
+  try{
+    if(localStorage.getItem('nowdoLoadedVersion')!==VERSION){
+      KEYS.forEach(k=>localStorage.removeItem(k));
+      localStorage.setItem('nowdoLoadedVersion', VERSION);
+      window.tasks=[]; window.quicks=[]; window.logs=[]; window.plans=[];
+      if(typeof save==='function') save();
+    }
+  }catch(e){}
+
+  function currentPoolType(){
+    try{
+      if(typeof poolTab==='string' && (poolTab==='work'||poolTab==='rest')) return poolTab;
+      const active=document.querySelector('#poolWorkTab.active,#poolRestTab.active');
+      if(active && active.id==='poolRestTab') return 'rest';
+    }catch(e){}
+    return 'work';
+  }
+
+  function fixEnergyDenoms(){
+    ['nowEnergyLabel','taskEnergyLabel'].forEach(id=>{
+      const span=document.getElementById(id);
+      if(!span) return;
+      const label=span.closest('label');
+      if(!label || label.querySelector('.energyDenom')) return;
+      Array.from(label.childNodes).forEach(n=>{
+        if(n.nodeType===3 && n.nodeValue.includes('/ 5')) n.nodeValue=n.nodeValue.replace('/ 5','');
+      });
+      const den=document.createElement('span');
+      den.className='energyDenom';
+      den.textContent='/ 5';
+      span.insertAdjacentElement('afterend', den);
+    });
+  }
+
+  const oldSyncLabels=window.syncLabels;
+  window.syncLabels=function(){ if(oldSyncLabels) oldSyncLabels(); fixEnergyDenoms(); };
+
+  window.clearTasks=function(){
+    const type=currentPoolType();
+    const before=(tasks||[]).length;
+    if(!confirm('Clear only the current '+type.toUpperCase()+' task pool?')) return;
+    tasks=(tasks||[]).filter(t=>t.type!==type);
+    if(typeof save==='function') save();
+    if(typeof renderTasks==='function') renderTasks();
+    if(typeof showToast==='function') showToast('Cleared '+(before-tasks.length)+' '+type.toUpperCase()+' task(s)');
+  };
+
+  window.clearLogs=function(){
+    if(!confirm('Clear all timeline logs and scheduled calendar events?')) return;
+    logs=[]; plans=[];
+    try{localStorage.setItem('nowDoLogsV16','[]');localStorage.setItem('nowDoPlansV16','[]');}catch(e){}
+    if(typeof save==='function') save();
+    if(typeof renderCalendar==='function') renderCalendar();
+    if(typeof showToast==='function') showToast('Timeline cleared');
+  };
+
+  window.closeCalendar=function(){
+    try{document.getElementById('eventPopover')?.classList.remove('active');}catch(e){}
+    document.getElementById('calendarModal')?.classList.remove('active');
+    document.body.classList.remove('calendar-open');
+  };
+  window.closeCalendarBg=function(e){ if(e && e.target && e.target.id==='calendarModal') closeCalendar(); };
+  window.openEventForDay=function(e,y,m,d){
+    e.preventDefault(); e.stopPropagation();
+    if(typeof cancelLongPress==='function') cancelLongPress();
+    popoverDate=new Date(y,m,d); selectedCalendarDate=new Date(y,m,d);
+    if(typeof renderExistingTaskPicker==='function') renderExistingTaskPicker();
+    const pop=document.getElementById('eventPopover');
+    if(pop){
+      document.body.appendChild(pop);
+      pop.classList.add('active');
+    }
+  };
+  window.closePopovers=function(){document.getElementById('eventPopover')?.classList.remove('active');};
+
+  window.addTask=function(){
+    const name=document.getElementById('taskName')?.value.trim();
+    if(!name){alert('Write a task name first.');return;}
+    tasks.push({id:Date.now(),name,type:currentTaskType,urgency,importance,time:Number(document.getElementById('taskTime').value),energy:Number(document.getElementById('taskEnergy').value)});
+    document.getElementById('taskName').value='';
+    save(); poolTab=currentTaskType; setPoolTab(poolTab); openPage('poolPage');
+  };
+
+  window.renderTasks=function(){
+    const list=document.getElementById('taskList'); if(!list)return;
+    const work=(tasks||[]).filter(t=>t.type==='work').length, rest=(tasks||[]).filter(t=>t.type==='rest').length;
+    document.getElementById('workCount').textContent='WORK: '+work;
+    document.getElementById('restCount').textContent='LIFE: '+rest;
+    document.getElementById('allCount').textContent='ALL: '+(work+rest);
+    const shown=(tasks||[]).filter(t=>t.type===currentPoolType()).sort(comparePriority);
+    if(!shown.length){list.innerHTML='<div class="empty">This folder is empty.</div>';return;}
+    list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} · ${formatTime(t.time)} · energy ${t.energy}/5 · urg ${Math.round(t.urgency*100)}% / imp ${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join('');
+  };
+
+  function chooseCandidate(){
+    const nowTime=Number(document.getElementById('nowTime')?.value || 30);
+    const nowEnergy=Number(document.getElementById('nowEnergy')?.value || 3);
+    const list=(tasks||[]).filter(t=>t.time<=nowTime && t.energy<=nowEnergy);
+    if(list.length) return [...list].sort(comparePriority)[0];
+    if((tasks||[]).length) return [...tasks].sort(comparePriority)[0];
+    return null;
+  }
+  window.chooseTask=function(){
+    const box=document.getElementById('result'); if(!box)return;
+    const c=chooseCandidate();
+    if(!c){box.innerHTML='<div class="empty">Task pool is empty. Add something first.</div>';return;}
+    const nowTime=Number(document.getElementById('nowTime')?.value || c.time);
+    const nowEnergy=Number(document.getElementById('nowEnergy')?.value || 3);
+    const mini=c.time>nowTime || c.energy>nowEnergy;
+    box.innerHTML=`<div class="now-result-clean"><div class="now-result-copy"><div class="now-result-kicker">${mini?'MINI VERSION':'DO NOW:'}</div><div class="now-result-name">${escapeHtml(c.name)}</div><div class="now-result-reason">${mini?'Try a 5-min version. Open it, prepare it, or do one tiny step.':'Do '+formatTime(Math.min(c.time,nowTime))+'. Priority: urgent, then important.'}<br>Type: ${typeName(c.type)} · urg ${Math.round(c.urgency*100)}% · imp ${Math.round(c.importance*100)}%</div></div><button class="full" onclick="startTask(${c.id})">START<br>TIMELINE</button></div>`;
+  };
+  window.startTask=function(id){
+    const item=(tasks||[]).find(t=>t.id===id); if(!item)return;
+    const minutes=Math.min(item.time, Number(document.getElementById('nowTime')?.value || item.time));
+    addLog(item.name,item.type,minutes);
+    tasks=(tasks||[]).filter(t=>t.id!==id);
+    save(); renderTasks();
+    const box=document.getElementById('result');
+    if(box) box.innerHTML='<div class="empty">Started. Added to timeline and removed from task pool.</div>';
+  };
+
+  // notes stay calendar-only; scheduled tasks stay timeline.
+  window.renderDayTimeline=function(){
+    const box=document.getElementById('dayTimeline'); if(!box)return;
+    const key=dateKey(selectedCalendarDate);
+    const dayLogs=(logs||[]).filter(l=>dateKey(new Date(l.start))===key).sort((a,b)=>new Date(a.start)-new Date(b.start));
+    const dayPlans=(plans||[]).filter(p=>p.date===key && p.kind==='plan');
+    const title=selectedCalendarDate.toLocaleDateString('en-CA',{month:'short',day:'numeric',weekday:'short'});
+    let rows='';
+    for(let h=0;h<=23;h++){
+      const hourLogs=dayLogs.filter(l=>new Date(l.start).getHours()===h), major=h%3===0;
+      rows+=`<div class="hourRow ${major?'major':''}"><div class="hourLabel">${String(h).padStart(2,'0')}:00</div><div class="hourSlot">`;
+      if(h===0) rows+=dayPlans.map(p=>`<div class="eventBlock plan"><strong>${escapeHtml(p.text)}</strong><div class="tag">Pinned · ${typeName(p.type||'work')} · ${formatTime(p.time||30)}</div></div>`).join('');
+      rows+=hourLogs.map(l=>{const st=new Date(l.start), en=new Date(l.end);return `<div class="eventBlock ${l.type}"><strong>${typeIcon(l.type)} ${escapeHtml(l.name)}</strong><div class="tag">${st.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} - ${en.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})} · ${l.minutes}min</div></div>`}).join('');
+      rows+='</div></div>';
+    }
+    box.innerHTML=`<div class="dayTitle">${title}</div><div class="hourTimeline">${rows}</div>`;
+  };
+
+  setTimeout(()=>{fixEnergyDenoms(); try{renderTasks();renderQuicks();renderCalendar();}catch(e){}},0);
+})();
+</script>
+
+
+<style id="v2-20-actual-fixes-css">
+/* v2.20 actual fixes: keep calendar inside the device screen, popover above calendar, current-folder clear only, compact result button, energy denominator size */
+.screen{position:relative!important; overflow:hidden!important;}
+#calendarModal.modal{
+  position:absolute!important;
+  inset:38px 12px 36px 12px!important;
+  width:auto!important;height:auto!important;
+  padding:6px!important;
+  z-index:7000!important;
+  background:rgba(28,34,45,.18)!important;
+  display:none!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  transform:none!important;
+}
+#calendarModal.modal.active{display:flex!important;}
+#calendarModal .modalBox{
+  width:100%!important;height:100%!important;max-height:none!important;
+  padding:8px!important;overflow:hidden!important;
+  transform:none!important;position:relative!important;
+  box-sizing:border-box!important;
+}
+#eventPopover{
+  z-index:999999!important;
+  position:fixed!important;
+  left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;
+  width:min(360px,calc(100vw - 40px))!important;
+  max-height:70vh!important;overflow:auto!important;
+}
+#eventPopover.active{display:block!important;}
+body:not(.calendar-open) #eventPopover{display:none!important;}
+.energyDenom{
+  display:inline-block!important;
+  font-size:16px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+  color:#07192d!important;
+  margin-left:3px!important;
+}
+.sliderBox.energy label{display:flex!important;align-items:center!important;gap:5px!important;}
+.sliderBox.energy label .value{font-size:16px!important;line-height:1!important;min-width:44px!important;padding:2px 6px!important;}
+.now-result-clean{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 118px!important;
+  gap:10px!important;align-items:center!important;width:100%!important;height:100%!important;
+  padding:10px 12px!important;box-sizing:border-box!important;text-align:left!important;
+}
+.now-result-clean .full{
+  position:static!important;width:118px!important;min-height:44px!important;margin:0!important;padding:6px 6px!important;
+  font-size:12px!important;line-height:1.05!important;white-space:normal!important;text-align:center!important;
+}
+.now-result-copy{min-width:0!important;text-align:left!important;}
+.now-result-kicker{font-size:12px!important;font-weight:900!important;margin-bottom:4px!important;}
+.now-result-name{font-size:20px!important;font-weight:900!important;line-height:1.05!important;margin:3px 0!important;word-break:break-word!important;}
+.now-result-reason{font-size:11px!important;line-height:1.3!important;color:#40506b!important;}
+</style>
+<script id="v2-20-actual-fixes-script">
+(function(){
+  const VERSION='NOWDO_v2_20_actual_fix';
+  const KEYS=['nowDoTasksV16','nowDoQuicksV16','nowDoLogsV16','nowDoPlansV16'];
+  try{
+    if(localStorage.getItem('nowdoLoadedVersion')!==VERSION){
+      KEYS.forEach(k=>localStorage.removeItem(k));
+      localStorage.setItem('nowdoLoadedVersion', VERSION);
+      tasks=[]; quicks=[]; logs=[]; plans=[];
+      if(typeof save==='function') save();
+    }
+  }catch(e){}
+
+  function activePoolType(){
+    const rest=document.getElementById('poolRestTab');
+    const work=document.getElementById('poolWorkTab');
+    if(rest && rest.classList.contains('active')) return 'rest';
+    if(work && work.classList.contains('active')) return 'work';
+    try{ if(poolTab==='rest'||poolTab==='work') return poolTab; }catch(e){}
+    return 'work';
+  }
+
+  window.clearTasks=function(){
+    const type=activePoolType();
+    if(!confirm('Clear only the current '+type.toUpperCase()+' folder?')) return;
+    tasks=(tasks||[]).filter(t=>t.type!==type);
+    if(typeof save==='function') save();
+    if(typeof renderTasks==='function') renderTasks();
+    if(typeof showToast==='function') showToast('Cleared '+type.toUpperCase()+' folder');
+  };
+
+  function fixClearButton(){
+    const btn=document.querySelector('#poolSubpage > button.full, #poolPage button.danger.full');
+    if(btn){ btn.setAttribute('onclick','clearTasks()'); btn.textContent='CLEAR CURRENT FOLDER'; }
+  }
+
+  function fixEnergyDenoms(){
+    ['nowEnergyLabel','taskEnergyLabel'].forEach(id=>{
+      const span=document.getElementById(id); if(!span) return;
+      const label=span.closest('label'); if(!label) return;
+      Array.from(label.childNodes).forEach(n=>{
+        if(n.nodeType===3) n.nodeValue=n.nodeValue.replace(/\s*\/\s*5/g,'');
+      });
+      let den=label.querySelector('.energyDenom');
+      if(!den){den=document.createElement('span'); den.className='energyDenom'; span.insertAdjacentElement('afterend',den);}
+      den.textContent='/ 5';
+    });
+  }
+  const oldSync=window.syncLabels;
+  window.syncLabels=function(){ if(oldSync) oldSync(); fixEnergyDenoms(); };
+
+  window.openCalendar=function(){
+    selectedCalendarDate=new Date();
+    const modal=document.getElementById('calendarModal');
+    const screen=document.querySelector('.screen');
+    if(modal && screen && modal.parentElement!==screen) screen.appendChild(modal);
+    if(typeof renderCalendar==='function') renderCalendar();
+    if(modal) modal.classList.add('active');
+    document.body.classList.add('calendar-open');
+  };
+  window.closeCalendar=function(){
+    document.getElementById('eventPopover')?.classList.remove('active');
+    document.getElementById('calendarModal')?.classList.remove('active');
+    document.body.classList.remove('calendar-open');
+  };
+  window.closeCalendarBg=function(e){ if(e && e.target && e.target.id==='calendarModal') closeCalendar(); };
+  window.openEventForDay=function(e,y,m,d){
+    e.preventDefault(); e.stopPropagation();
+    if(typeof cancelLongPress==='function') cancelLongPress();
+    popoverDate=new Date(y,m,d); selectedCalendarDate=new Date(y,m,d);
+    if(typeof renderExistingTaskPicker==='function') renderExistingTaskPicker();
+    const pop=document.getElementById('eventPopover');
+    if(pop){ document.body.appendChild(pop); pop.classList.add('active'); }
+  };
+  window.closePopovers=function(){document.getElementById('eventPopover')?.classList.remove('active');};
+
+  window.chooseTask=function(){
+    const box=document.getElementById('result'); if(!box) return;
+    const nowTime=Number(document.getElementById('nowTime')?.value||30);
+    const nowEnergy=Number(document.getElementById('nowEnergy')?.value||3);
+    const fitting=(tasks||[]).filter(t=>t.time<=nowTime && t.energy<=nowEnergy);
+    const c=(fitting.length?fitting:[...(tasks||[])]).sort(comparePriority)[0];
+    if(!c){ box.innerHTML='<div class="empty">Task pool is empty. Add something first.</div>'; return; }
+    const mini=c.time>nowTime || c.energy>nowEnergy;
+    box.innerHTML=`<div class="now-result-clean"><div class="now-result-copy"><div class="now-result-kicker">${mini?'MINI VERSION':'DO NOW:'}</div><div class="now-result-name">${escapeHtml(c.name)}</div><div class="now-result-reason">${mini?'Try a 5-min version. Open it, prepare it, or do one tiny step.':'Do '+formatTime(Math.min(c.time,nowTime))+'. Priority: urgent, then important.'}<br>Type: ${typeName(c.type)} · urg ${Math.round(c.urgency*100)}% · imp ${Math.round(c.importance*100)}%</div></div><button class="full" onclick="startTask(${c.id})">START<br>TIMELINE</button></div>`;
+  };
+  window.startTask=function(id){
+    const item=(tasks||[]).find(t=>t.id===id); if(!item) return;
+    const minutes=Math.min(item.time,Number(document.getElementById('nowTime')?.value||item.time));
+    addLog(item.name,item.type,minutes);
+    tasks=(tasks||[]).filter(t=>t.id!==id);
+    if(typeof save==='function') save();
+    if(typeof renderTasks==='function') renderTasks();
+    const box=document.getElementById('result');
+    if(box) box.innerHTML='<div class="empty">Started. Added to timeline and removed from task pool.</div>';
+  };
+
+  window.renderTasks=function(){
+    const list=document.getElementById('taskList'); if(!list) return;
+    const work=(tasks||[]).filter(t=>t.type==='work').length;
+    const rest=(tasks||[]).filter(t=>t.type==='rest').length;
+    ['workCount','workCountTop'].forEach(id=>{const el=document.getElementById(id); if(el) el.textContent='WORK: '+work;});
+    ['restCount','restCountTop'].forEach(id=>{const el=document.getElementById(id); if(el) el.textContent='LIFE: '+rest;});
+    ['allCount','allCountTop'].forEach(id=>{const el=document.getElementById(id); if(el) el.textContent='ALL: '+(work+rest);});
+    const shown=(tasks||[]).filter(t=>t.type===activePoolType()).sort(comparePriority);
+    if(!shown.length){list.innerHTML='<div class="empty">This folder is empty.</div>'; fixClearButton(); return;}
+    list.innerHTML=shown.map(t=>`<div class="task ${t.type}"><div><strong><span class="icon ${t.type}">${typeIcon(t.type)}</span>${escapeHtml(t.name)}</strong><span class="tag">${typeName(t.type)} · ${formatTime(t.time)} · energy ${t.energy}/5 · urg ${Math.round(t.urgency*100)}% / imp ${Math.round(t.importance*100)}%</span></div><div class="actions"><button class="secondary" onclick="startTask(${t.id})">START</button><button class="danger" onclick="deleteTask(${t.id})">DEL</button></div></div>`).join('');
+    fixClearButton();
+  };
+
+  window.renderQuicks=function(){
+    const list=document.getElementById('quickList'); if(!list)return;
+    const shown=(quicks||[]).filter(q=>q.type==='fish');
+    if(!shown.length){list.innerHTML='<div class="empty">No QUICK shortcuts yet. Add one from ADD.</div>';return;}
+    list.innerHTML=shown.map(q=>`<div class="fishChip"><span>${escapeHtml(q.name)}</span><button onclick="useQuick(${q.id})">+10m</button><button class="danger" onclick="deleteQuick(${q.id})">×</button></div>`).join('');
+  };
+
+  setTimeout(()=>{fixEnergyDenoms();fixClearButton();try{renderTasks();renderQuicks();}catch(e){}},0);
 })();
 </script>
 
