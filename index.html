@@ -622,6 +622,108 @@ button.full{height:34px!important;margin:9px 0 0!important;width:100%!important;
   .screen{left:20.0%!important;right:18.4%!important;top:19.5%!important;bottom:20.2%!important;}
 }
 
+
+
+/* =========================================================
+   v2.11 MICRO FIX — requested final tweaks only
+   - no PS text
+   - D-pad upward
+   - white inner body slightly larger, clear case visually narrower
+   - ADD page: move URGENCY X IMPORTANCE above NOW text on right
+   ========================================================= */
+
+/* 1) absolutely remove the PS letters while keeping one blank round detail */
+.psLogo{display:none!important;visibility:hidden!important;opacity:0!important;}
+.brandPlate{
+  display:flex!important;
+  font-size:0!important;
+  color:transparent!important;
+  text-indent:-9999px!important;
+  overflow:hidden!important;
+}
+.brandPlate::before,
+.brandPlate::after{
+  content:""!important;
+  font-size:0!important;
+  color:transparent!important;
+  text-indent:-9999px!important;
+}
+.brandPlate small{display:none!important;}
+
+/* also remove any PS/HOME-looking copyright-ish center mark text if older rules leak through */
+.bottomControls .long,
+.bottomControls span.long{
+  color:#657082!important;
+}
+
+/* 2) lift the left D-pad so it stops kissing the analog stick */
+.dpad{
+  top:40.9%!important;
+  left:5.35%!important;
+  width:8.7%!important;
+  filter:drop-shadow(0 5px 7px rgba(0,0,0,.20))!important;
+}
+.stick{
+  bottom:30.9%!important;
+}
+
+/* 3) make the white metal/base plate a little larger so the clear acrylic rim reads thinner */
+.console::before{
+  left:3.4%!important;
+  right:3.4%!important;
+  top:11.0%!important;
+  bottom:11.0%!important;
+  border-radius:56px!important;
+  background:
+    radial-gradient(ellipse at 12% 50%,rgba(255,255,255,.96) 0 16%,transparent 37%),
+    radial-gradient(ellipse at 88% 50%,rgba(255,255,255,.92) 0 16%,transparent 37%),
+    linear-gradient(90deg,#f9fbff 0%,#e5ebf4 13%,#ffffff 48%,#e7edf6 86%,#f9fbff 100%)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.98),
+    inset 0 -16px 34px rgba(135,150,170,.20),
+    0 0 34px rgba(255,255,255,.34)!important;
+}
+.glassShell{
+  opacity:.86!important;
+}
+
+/* 4) ADD page: keep exact layout, only move the title to the right above the NOW hint */
+#addSubpage.active .card > label:nth-of-type(4){
+  grid-column:2!important;
+  grid-row:5!important;
+  align-self:end!important;
+  margin:0 0 20px 0!important;
+  font-size:16px!important;
+  line-height:1.1!important;
+  text-align:left!important;
+  position:static!important;
+  width:auto!important;
+  color:#111827!important;
+  font-weight:900!important;
+}
+#addSubpage.active .priorityHint{
+  grid-column:2!important;
+  grid-row:5!important;
+  align-self:end!important;
+  margin:0 0 2px 0!important;
+  font-size:11px!important;
+  line-height:1.15!important;
+  position:static!important;
+  width:auto!important;
+  color:#536072!important;
+}
+#addSubpage.active button.full{
+  grid-column:1!important;
+  grid-row:5!important;
+}
+
+/* keep the priority grid stable after moving the title */
+#addSubpage.active .priorityArea{
+  grid-column:2!important;
+  grid-row:1 / span 4!important;
+  margin-top:30px!important;
+}
+
 </style>
 </head>
 <body>
