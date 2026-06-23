@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>NOWDO v2.5 Reference Match</title>
 <style>
 :root{
@@ -2926,27 +2926,24 @@ body:not(.calendar-open) #eventPopover{display:none!important;}
 </style>
 
 
-
-<style id="nowdo-device-independent-stage-final">
-/* FINAL DEVICE-INDEPENDENT STAGE PATCH
-   Same 1280×960 NOWDO canvas on every device. The device only scales the canvas.
-   This does NOT change app UI, buttons, calendar, task logic, or inner layout. */
-html, body{
+<style id="v2-23-ipad9-actual-bigger-final">
+/* v2.23 — iPad 9 fullscreen actual size fix.
+   Do NOT change UI layout. It only enlarges the fixed 1280x960 stage
+   and lets the useless outer dark margin crop away. */
+html,body{
   width:100%!important;
   height:100%!important;
-  min-height:100%!important;
-  margin:0!important;
-  padding:0!important;
   overflow:hidden!important;
 }
 body{
-  display:grid!important;
-  place-items:center!important;
-  background:radial-gradient(ellipse at 50% 42%,#3b3f47 0%,#23272e 58%,#171a20 100%)!important;
-  -webkit-text-size-adjust:100%!important;
-  text-size-adjust:100%!important;
-  touch-action:manipulation!important;
+  position:fixed!important;
+  inset:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
 }
+
+/* Keep the same internal coordinate system; size change happens only by transform. */
 .console{
   width:1280px!important;
   height:960px!important;
@@ -2954,207 +2951,57 @@ body{
   max-width:1280px!important;
   min-height:960px!important;
   max-height:960px!important;
-  margin:0!important;
   flex:0 0 auto!important;
   transform-origin:center center!important;
-  transform:scale(var(--nowdo-stage-scale, 1))!important;
-}
-@supports (height:100dvh){
-  html, body{height:100dvh!important;}
+  margin:0!important;
+  will-change:transform!important;
 }
 </style>
-<script id="nowdo-device-independent-stage-final-js">
+
+<script id="v2-23-ipad9-actual-bigger-final-js">
 (function(){
   const STAGE_W = 1280;
   const STAGE_H = 960;
-  const SAFE_PAD = 8;
-  function viewportSize(){
-    if(window.visualViewport){
-      return { w: window.visualViewport.width, h: window.visualViewport.height };
-    }
-    return { w: window.innerWidth, h: window.innerHeight };
-  }
-  function fitNowdoStage(){
+
+  /* 1.24 is intentional:
+     normal contain-scale on iPad 9 is 810/960 = 0.84375.
+     0.84375 * 1.24 = about 1.046, so the handheld becomes visibly larger
+     and only the unnecessary outer dark margin gets cropped. */
+  const EXTRA_ZOOM = 1.24;
+
+  function fitStageActuallyBigger(){
     const c = document.querySelector('.console');
     if(!c) return;
-    const vp = viewportSize();
-    const scale = Math.min((vp.w - SAFE_PAD * 2) / STAGE_W, (vp.h - SAFE_PAD * 2) / STAGE_H, 1);
-    const cleanScale = Math.max(0.1, scale);
-    document.documentElement.style.setProperty('--nowdo-stage-scale', cleanScale.toFixed(5));
-    document.body.style.width = vp.w + 'px';
-    document.body.style.height = vp.h + 'px';
+
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const base = Math.min(vw / STAGE_W, vh / STAGE_H);
+    const scale = base * EXTRA_ZOOM;
+
+    c.style.transform = 'scale(' + scale + ')';
+    c.style.transformOrigin = 'center center';
+
+    document.documentElement.style.width = vw + 'px';
+    document.documentElement.style.height = vh + 'px';
+    document.body.style.width = vw + 'px';
+    document.body.style.height = vh + 'px';
   }
-  window.addEventListener('resize', fitNowdoStage, {passive:true});
-  window.addEventListener('orientationchange', fitNowdoStage, {passive:true});
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', fitNowdoStage, {passive:true});
-    window.visualViewport.addEventListener('scroll', fitNowdoStage, {passive:true});
-  }
+
+  window.addEventListener('resize', fitStageActuallyBigger, {passive:true});
+  window.addEventListener('orientationchange', function(){
+    setTimeout(fitStageActuallyBigger, 80);
+    setTimeout(fitStageActuallyBigger, 260);
+  }, {passive:true});
+
   if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', fitNowdoStage);
+    document.addEventListener('DOMContentLoaded', fitStageActuallyBigger);
   }else{
-    fitNowdoStage();
+    fitStageActuallyBigger();
   }
-  setTimeout(fitNowdoStage, 80);
-  setTimeout(fitNowdoStage, 500);
+  setTimeout(fitStageActuallyBigger, 80);
+  setTimeout(fitStageActuallyBigger, 350);
 })();
 </script>
 
 </body>
 </html>
-
-<style id="nowdo-ipad9-fullscreen-scale-override">
-/* iPad 9 full-screen sizing override.
-   Fixed 1280x960 design canvas, scaled to iPad 9 landscape full-screen 1080x810.
-   This only changes the outer scale, not UI/layout/calendar/buttons. */
-:root{--nowdo-stage-scale:0.84375;}
-.console{
-  width:1280px!important;
-  height:960px!important;
-  min-width:1280px!important;
-  max-width:1280px!important;
-  min-height:960px!important;
-  max-height:960px!important;
-  transform-origin:center center!important;
-  transform:scale(var(--nowdo-stage-scale, .84375))!important;
-}
-html,body{
-  margin:0!important;
-  padding:0!important;
-  overflow:hidden!important;
-  width:100%!important;
-  height:100%!important;
-}
-body{
-  display:grid!important;
-  place-items:center!important;
-}
-</style>
-<script id="nowdo-ipad9-fullscreen-scale-override-js">
-(function(){
-  const STAGE_W = 1280;
-  const STAGE_H = 960;
-  const IPAD9_W = 1080;
-  const IPAD9_H = 810;
-
-  function hasTouch(){
-    return (navigator.maxTouchPoints || 0) > 1;
-  }
-  function isLikelyIPad(){
-    const sw = Math.max(screen.width || 0, screen.height || 0);
-    const sh = Math.min(screen.width || 0, screen.height || 0);
-    const iPadScreen = sw >= 1000 && sw <= 1120 && sh >= 760 && sh <= 850;
-    const iPadUA = /iPad/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && hasTouch());
-    return iPadScreen || iPadUA;
-  }
-  function viewport(){
-    if(window.visualViewport){
-      return {w: window.visualViewport.width, h: window.visualViewport.height};
-    }
-    return {w: window.innerWidth, h: window.innerHeight};
-  }
-  function fit(){
-    const vp = viewport();
-    let scale;
-    if(isLikelyIPad()){
-      /* iPad 9 landscape full-screen target: 1080 x 810 CSS px. */
-      scale = Math.min(IPAD9_W / STAGE_W, IPAD9_H / STAGE_H);
-    }else{
-      const pad = 8;
-      scale = Math.min((vp.w - pad * 2) / STAGE_W, (vp.h - pad * 2) / STAGE_H, 1);
-    }
-    scale = Math.max(0.1, scale);
-    document.documentElement.style.setProperty('--nowdo-stage-scale', scale.toFixed(5));
-    document.body.style.width = vp.w + 'px';
-    document.body.style.height = vp.h + 'px';
-  }
-  window.addEventListener('resize', fit, {passive:true});
-  window.addEventListener('orientationchange', fit, {passive:true});
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', fit, {passive:true});
-    window.visualViewport.addEventListener('scroll', fit, {passive:true});
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fit); else fit();
-  setTimeout(fit, 80);
-  setTimeout(fit, 500);
-})();
-</script>
-
-
-<style id="nowdo-ipad9-bigger-final-override">
-/* iPad 9 bigger fit: keep the 1280x960 canvas, but use the visible area more aggressively. */
-:root{--nowdo-stage-scale:1;}
-html,body{
-  margin:0!important;
-  padding:0!important;
-  width:100%!important;
-  height:100%!important;
-  overflow:hidden!important;
-}
-body{
-  display:grid!important;
-  place-items:center!important;
-  background:radial-gradient(ellipse at 50% 42%,#3b3f47 0%,#23272e 58%,#171a20 100%)!important;
-}
-.console{
-  width:1280px!important;
-  height:960px!important;
-  min-width:1280px!important;
-  max-width:1280px!important;
-  min-height:960px!important;
-  max-height:960px!important;
-  transform:scale(var(--nowdo-stage-scale))!important;
-  transform-origin:center center!important;
-  margin:0!important;
-}
-</style>
-<script id="nowdo-ipad9-bigger-final-override-js">
-(function(){
-  const STAGE_W = 1280;
-  const STAGE_H = 960;
-
-  function viewport(){
-    if(window.visualViewport){
-      return {w: window.visualViewport.width, h: window.visualViewport.height};
-    }
-    return {w: window.innerWidth, h: window.innerHeight};
-  }
-
-  function isIPadLike(){
-    const ua = navigator.userAgent || '';
-    const touch = (navigator.maxTouchPoints || 0) > 1;
-    const sw = Math.max(screen.width || 0, screen.height || 0);
-    const sh = Math.min(screen.width || 0, screen.height || 0);
-    return /iPad/.test(ua) || (/Macintosh/.test(ua) && touch) || (touch && sw >= 1000 && sw <= 1120 && sh >= 760 && sh <= 850);
-  }
-
-  function fit(){
-    const vp = viewport();
-    /*
-      Normal fit preserves the full 1280x960 canvas.
-      iPad Safari has large browser chrome, so pure fit makes NOWDO look tiny.
-      This controlled boost fills the iPad 9 screen much better while keeping the same ratio.
-    */
-    const safe = isIPadLike() ? 0 : 6;
-    let scale = Math.min((vp.w - safe * 2) / STAGE_W, (vp.h - safe * 2) / STAGE_H);
-    if(isIPadLike()) scale *= 1.34;
-    else scale *= 1.08;
-    scale = Math.max(0.1, Math.min(scale, 1.12));
-
-    document.documentElement.style.setProperty('--nowdo-stage-scale', scale.toFixed(5));
-    document.body.style.width = vp.w + 'px';
-    document.body.style.height = vp.h + 'px';
-  }
-
-  window.addEventListener('resize', fit, {passive:true});
-  window.addEventListener('orientationchange', fit, {passive:true});
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', fit, {passive:true});
-    window.visualViewport.addEventListener('scroll', fit, {passive:true});
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fit); else fit();
-  setTimeout(fit, 80);
-  setTimeout(fit, 400);
-  setTimeout(fit, 1000);
-})();
-</script>
