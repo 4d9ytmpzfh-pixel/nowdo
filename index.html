@@ -3062,5 +3062,64 @@ body{
 .calendarBtn{font-size:0!important;}
 .calendarBtn::after{content:"📅"!important;font-size:18px!important;}
 </style>
+
+
+<style id="v2-27-ipad-final-tiny-smaller-sticky-fit">
+/* v2.27: final tiny shrink. Keep everything else exactly the same. */
+.calendarBtn{font-size:0!important;line-height:0!important;overflow:hidden!important;}
+.calendarBtn::after{content:"📅"!important;font-size:18px!important;line-height:1!important;display:block!important;}
+</style>
+<script id="v2-27-ipad-final-tiny-smaller-sticky-fit">
+(function(){
+  var VISIBLE_W = 1184;
+  var VISIBLE_H = 722;
+  function viewportSize(){
+    var vv = window.visualViewport;
+    return { w: vv ? vv.width : window.innerWidth, h: vv ? vv.height : window.innerHeight };
+  }
+  function fitNOWDOFinal(){
+    var c = document.querySelector('.console');
+    if(!c) return;
+    var vp = viewportSize();
+    var isIPadish = Math.min(vp.w, vp.h) >= 700 && Math.max(vp.w, vp.h) <= 1200;
+    var standalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+    /* a little smaller than v2.26: leave a real visible rim on iPad 9 */
+    var sideMargin = standalone ? 42 : 46;
+    var topMargin = standalone ? 24 : 28;
+    var fitByVisibleShell = Math.min(
+      (vp.w - sideMargin * 2) / VISIBLE_W,
+      (vp.h - topMargin * 2) / VISIBLE_H
+    );
+    var maxScale = isIPadish ? 0.835 : 1.0;
+    var s = Math.min(fitByVisibleShell, maxScale);
+
+    c.style.transform = 'scale(' + s.toFixed(4) + ')';
+    c.style.transformOrigin = 'center center';
+    document.documentElement.style.width = vp.w + 'px';
+    document.documentElement.style.height = vp.h + 'px';
+    document.body.style.width = vp.w + 'px';
+    document.body.style.height = vp.h + 'px';
+  }
+
+  window.addEventListener('resize', fitNOWDOFinal, {passive:true});
+  window.addEventListener('orientationchange', function(){ setTimeout(fitNOWDOFinal, 80); }, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', fitNOWDOFinal, {passive:true});
+    window.visualViewport.addEventListener('scroll', fitNOWDOFinal, {passive:true});
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitNOWDOFinal);
+  else fitNOWDOFinal();
+
+  /* Safari/PWA may run older fitter after first paint; hold the final size briefly. */
+  var n = 0;
+  var timer = setInterval(function(){
+    fitNOWDOFinal();
+    n++;
+    if(n > 24) clearInterval(timer);
+  }, 120);
+})();
+</script>
+
 </body>
 </html>
