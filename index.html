@@ -1439,5 +1439,202 @@ button,.quickSmall{padding:6px 8px!important;font-size:11px!important;line-heigh
 }
 </style>
 
+
+<style id="v2-13-shell-fit-and-calendar-timeline">
+/* =========================================================
+   v2.13 — shell fit + calendar timeline restore
+   Keep v2.12 layout. Only refine the clear acrylic shell and
+   restore the timeline area inside the in-screen calendar.
+   ========================================================= */
+
+/* Clear acrylic shell: make it hug the white body instead of floating far outside. */
+.glassShell{
+  inset:22px 26px 30px 26px!important;
+  border-radius:82px 56px 82px 56px / 56px 82px 56px 82px!important;
+  border-width:3px!important;
+  opacity:.96!important;
+  background:
+    linear-gradient(115deg,rgba(255,255,255,.48) 0 8%,transparent 20% 76%,rgba(255,255,255,.23) 93%),
+    radial-gradient(ellipse at 12% 8%,rgba(255,255,255,.55),transparent 17%),
+    radial-gradient(ellipse at 88% 9%,rgba(255,255,255,.38),transparent 17%)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(130,160,200,.20),
+    inset 0 16px 26px rgba(255,255,255,.24),
+    inset 0 -16px 28px rgba(40,64,96,.13),
+    0 0 0 1px rgba(255,255,255,.32),
+    0 0 22px rgba(190,220,255,.22)!important;
+}
+.glassShell:before{
+  left:220px!important;
+  right:220px!important;
+  top:14px!important;
+  height:18px!important;
+  opacity:.86!important;
+}
+.glassShell:after{
+  left:190px!important;
+  right:190px!important;
+  bottom:15px!important;
+  height:15px!important;
+  opacity:.82!important;
+}
+
+/* Corner loops / acrylic corners: pull them inward so they follow the handheld body. */
+.loop{
+  width:92px!important;
+  height:58px!important;
+  border-width:4px!important;
+  opacity:.88!important;
+}
+.l1{left:12px!important;top:60px!important;transform:rotate(-12deg)!important;}
+.l2{right:12px!important;top:60px!important;transform:rotate(12deg)!important;}
+.l3{left:12px!important;bottom:58px!important;transform:rotate(12deg)!important;}
+.l4{right:12px!important;bottom:58px!important;transform:rotate(-12deg)!important;}
+.cornerCut{
+  width:74px!important;
+  height:54px!important;
+  opacity:.88!important;
+}
+.cc1{left:86px!important;top:50px!important;}
+.cc2{right:86px!important;top:50px!important;transform:scaleX(-1)!important;}
+.cc3{left:86px!important;bottom:50px!important;transform:scaleY(-1)!important;}
+.cc4{right:86px!important;bottom:50px!important;transform:scale(-1)!important;}
+.cornerCut:after{
+  left:18px!important;
+  top:11px!important;
+  width:45px!important;
+  height:31px!important;
+}
+.topRail{
+  left:230px!important;
+  right:230px!important;
+  top:30px!important;
+  height:21px!important;
+}
+.bottomRail{
+  left:230px!important;
+  right:230px!important;
+  bottom:31px!important;
+  height:19px!important;
+}
+
+/* Calendar: restore the day timeline instead of clipping it away. */
+#calendarModal.modal.active{
+  display:flex!important;
+}
+#calendarModal{
+  inset:34px 9px 31px 9px!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+}
+#calendarModal .modalBox{
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  display:grid!important;
+  grid-template-rows:auto auto minmax(0,1fr) minmax(96px,132px)!important;
+  gap:4px!important;
+  padding:7px!important;
+}
+#calendarModal .modalHead{
+  min-height:26px!important;
+}
+#calendarModal .stats{
+  margin:0!important;
+  min-height:24px!important;
+}
+#calendarMonth{
+  min-height:0!important;
+  overflow:hidden!important;
+}
+#calendarMonth .modalHead{
+  margin-bottom:2px!important;
+}
+#calendarModal .calendarGrid{
+  margin-top:3px!important;
+  max-height:188px!important;
+  overflow:hidden!important;
+}
+#calendarModal .calHead{
+  min-height:17px!important;
+  font-size:8px!important;
+  padding:1px!important;
+}
+#calendarModal .calDay{
+  min-height:22px!important;
+  padding:1px 2px!important;
+}
+#calendarModal .calNum{
+  font-size:9px!important;
+}
+#calendarModal .calDots{
+  margin-top:1px!important;
+}
+#calendarModal .calDot{
+  width:4px!important;
+  height:4px!important;
+}
+#weekPlanner{
+  min-height:0!important;
+}
+#dayTimeline,.dayTimeline{
+  display:block!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+#calendarModal .dayTitle{
+  margin:1px 0 3px!important;
+  font-size:11px!important;
+  line-height:1.1!important;
+}
+#calendarModal .hourTimeline{
+  display:block!important;
+  max-height:112px!important;
+  overflow-y:auto!important;
+  margin-top:2px!important;
+  font-size:9px!important;
+}
+#calendarModal .hourRow{
+  grid-template-columns:34px 1fr!important;
+  min-height:18px!important;
+}
+#calendarModal .hourRow.major{
+  min-height:22px!important;
+}
+#calendarModal .hourLabel{
+  padding:3px 4px!important;
+}
+#calendarModal .hourSlot{
+  padding:2px 4px!important;
+}
+#calendarModal .eventBlock{
+  padding:3px 5px!important;
+  font-size:9px!important;
+  margin:1px 0!important;
+}
+#calendarModal .eventBlock .tag{
+  font-size:8px!important;
+}
+
+/* Long-press picker: keep the add-time/task picker visible inside the screen. */
+#eventPopover.popover.active{
+  display:block!important;
+}
+#eventPopover.popover{
+  width:280px!important;
+  max-height:210px!important;
+  overflow:hidden!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  z-index:120!important;
+}
+#eventPopover .existingTasks{
+  max-height:105px!important;
+  overflow-y:auto!important;
+}
+</style>
+
 </body>
 </html>
